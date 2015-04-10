@@ -10,7 +10,7 @@ void init(int* a, int size){
 int main() {
    int i=0;
    int* a=(int*)malloc(sizeof(int)*ARRAYSIZE);
-   init(b,ARRAYSIZE);
+   init(,ARRAYSIZE);
    omp_set_num_threads(4);
    //intended behavior   : a[i] gets the sum of its value and its next (cyclic) neighbor's initial value.
    //observed behavior   : inconsistent quasi cumulative.
