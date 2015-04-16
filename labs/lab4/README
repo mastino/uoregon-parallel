@@ -1,0 +1,49 @@
+################################################################################
+#  Map Pattern (lab4)
+################################################################################
+
+As you learned in lecture, the map pattern is one in which an operation is
+performed (mapped) across an input collection of elements resulting in a different 
+output collection of elements where output index is determined by the input index.
+
+################################################################################
+#  Problem Statement
+################################################################################
+
+The map function returns a password if the input guess matches the md5 checksum
+representing the password; otherwise the map function returns NULL.  You will
+write a program to map this function across and input collection of integers,
+1..max_val (see pass_serial.c for a serial solution).  To receive complete
+credit you must implement the program in each of the three target languages.
+
+The lab instructors will test your three implementations over a set of inputs.
+The performance of your program will depend on your parallelization strategy.
+We will have a contest to see which one of you can produce the "fastest" program.
+The contest winner(s) will produce a program that performs in the shortest
+amount of time (in comparison with other students in the lab).
+
+################################################################################
+#  What to do
+################################################################################
+
+1. Get the latest changes into your repository on WOPR .
+
+git fetch 
+git checkout origin/master labs
+
+2. Look at the source code in pass_serial.c to understand what it is doing.
+
+3. Generate a checksum to test the program. For example:
+
+     echo -n "00000019" | md5sum
+
+4. Run make and look at the output of pass_serial with the generated checksum
+   you produced in step 3.
+
+5. Write a parallel version of the program in Cilk, TBB, and OpenMP.
+
+4. Update the Makefile entries for the other three build targets with compilation
+   commands for the source files.  Add a check targets to the makefile so that
+   all three programs will be run for some input.
+
+5. Commit the source files and updated Makefile to your repository.
