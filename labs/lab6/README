@@ -33,14 +33,13 @@ Time spent outside of the matrix_multiply function need not be measured.
 1. Check out the repository onto WOPR
 
 	git fetch
-	git checkout prigin/master labs
+	git checkout origin/master labs
 
 2. Run the Makefile and look at the source code and output of the program
 
-3. Write a parallel version of the program in Cilk, TBB, or OpenMP.
- You may implement in all 3 technologies but only one implementation is required.
+3. Write parallel versions of the program in OpenMP and  Cilk OR TBB.
 
-4. Give us a paragraph on your data reorganization, why you thought it 
+4. Wite a paragraph on your data reorganization, why you thought it 
 would help, and whether it actually helped in 'datareorg.txt'
 
 5. Update the Makefile entries for your build targets with compilation 
