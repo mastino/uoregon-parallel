@@ -30,7 +30,7 @@ exactly the same output). Your optimized versions should maintain this property.
 1. Check out the repository onto WOPR
 
      git fetch
-     git checkout labs
+     git checkout origin/master labs
  
 2. Run the Makefile and look at the source code and output of the serial program.
 
