@@ -22,3 +22,10 @@ https://wci.llnl.gov/simulation/computer-codes/visit/executables
 3. Click on Draw icon (middle-right area of screen)
 4. Experiment with output (e.g., click and drag to rotate)
 
+
+###############################################################
+
+update 2015 May 20 
+Your classmate Ryan Bleile  <rbleile@cs> has written a slimmed down VTK writer class
+which he has generously made available to you.
+
