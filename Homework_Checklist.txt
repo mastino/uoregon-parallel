@@ -1,0 +1,37 @@
+
+
+Before your instructors ever see your homework, 
+you have full knowledge of whether or not there 
+even *could* be anything there for them to grade.
+
+These checks are independent of any particular exercise, 
+but typically necessary for all.
+
+
+
+1) Clone your repo so you are seeing what the instructors will be seeing.
+
+2) Do all the necessary files exist?
+
+3) Are there any unnecessary files present? ( i.e. binaries)
+
+4) Entering 'make clean' in a freshly cloned repo should change nothing.
+
+5) Entering 'make' will execute the first rule listed in the Makefile 
+	(traditionally named 'all') which should build all your executables.
+
+6) Entering 'make <target>' should not result in the compiler barfing.
+
+7) Entering variants of 'make check' should run a version of your executable 
+	which is not older that the sources it is built from.
+
+8) 'make check' variants should not obviously crash. 
+
+9) 'make clean' should remove all files created by other make targets.
+
+10) Are your parallel outputs logically congruent with your serial output?
+
+11) Do you have time and space performance metrics relative to serial?
+
+12) Have you written up your critical observations and documented your code?
+
