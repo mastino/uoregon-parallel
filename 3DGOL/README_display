@@ -26,6 +26,8 @@ https://wci.llnl.gov/simulation/computer-codes/visit/executables
 ###############################################################
 
 update 2015 May 20 
-Your classmate Ryan Bleile  <rbleile@cs> has written a slimmed down VTK writer class
+Your classmate Ryan Bleile  <rbleile> has written a slimmed down VTK writer class in C++
 which he has generously made available to you.
+
+Trace Hagan <thagan> converted Ryan's method to C and makes it available here as VTK.c 
 
