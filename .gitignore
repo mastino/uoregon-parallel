@@ -1,0 +1,15 @@
+# Compiled source #
+###################
+*.out
+*.o
+
+
+# Output files #
+###############
+*.dat
+*.tmp
+
+# stuff #
+########
+git_acp.bash
+
