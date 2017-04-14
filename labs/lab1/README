@@ -1,0 +1,36 @@
+################################################################################
+#  Getting to know the environment (you should have already done this)
+################################################################################
+
+1. Check out the repository into your WOPR home with the command:
+
+      git clone http://www.cs.uoregon.edu/Classes/15S/cis410parallel/repo.git
+
+2. Examine then run the Makefile and look at the source code and output of
+   running each of the programs.
+
+3. You will not need to make your repo readable by 'all' as we will change your
+   repo's group to be accessible to the instructors.  We will pull your
+   repository to check your results.
+
+################################################################################
+#  What to do
+################################################################################nge
+
+When finished with this lab you will have verified your access to wopr.uoregon.edu
+and the workstations in the lab; you will also have checked out this repository
+and compiled a HelloWorld application in each of the three languages.
+
+Your grade on this lab is based on altering the helloWorld.c source to: 
+
+    1. Vary the number of threads to use and only output the number of threads
+       the program is called with.
+
+    2. Add a "check" target to Makefile that calls the program you altered using
+       the bash time command with a varing numbers of threads 1,2,4,8,16 & 32.
+
+    3. Finally commit the changes back into you repository so we can pull your
+       changes and type 'make check' to ensure you have completed the exercise.
+
+  Note: Using the bash time command to measure performance is not a recommended 
+  	way to measure performance, but we all have to start somewhere.

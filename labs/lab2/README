@@ -1,0 +1,23 @@
+################################################################################
+#  Looking at debugging
+################################################################################
+
+In the second lab of the term you will be looking at three programs and fixing the
+OpenMP and Cilk programs.  For extra practice, run the TBB program and verify
+that it runs.  Is the output of the TBB program the prefix sum of the input?
+
+Your grade on this lab is based on having fixed the OpenMP and Cilk programs.
+
+################################################################################
+#  What to do
+################################################################################
+
+1. Pull from your repo repository to get the assignment for lab two.
+
+2. Fix the OpenMP and Cilk programs by editing and fixing the files you find in
+the class repository.
+
+3. Due date is the start of class next Thursday.
+
+Note: Craig and Tom will hold open office hours in the WOPR lab room Wednesday noon to 3pm.
+

@@ -1,0 +1,41 @@
+################################################################################
+#  Collective Reduction Operator
+################################################################################
+
+As you learned in the lecture, a collective reduction operator is one in which
+an operation is performed to reduce a collection of elements to a single value.
+
+################################################################################
+#  Problem Statement
+################################################################################
+
+OSNAP has and handles a large amount of sensitive data.  Some of the data is
+classified such that only specific sets of people should be able to access the
+data when all of them are present.
+
+Our security consultants have devised an XOR based encryption strategy 
+to support the requirements and have provided a serial reference implementation. 
+XOR is associative and commutative, so there may be an opportunity to improve 
+performance with a parallel implementation. 
+
+################################################################################
+#  What to do
+################################################################################
+
+1. Check out the repository onto WOPR
+
+     git fetch
+     git checkout labs
+ 
+2. Run the Makefile and look at the source code and output of the serial program.
+
+3. Write a parallel version of the serial program in Cilk, TBB, and OpenMP.
+
+4. Update the Makefile entries for the other three build targets 
+   with compilation commands for your source files.
+
+5. Update the Makefile entries for the three check targets 
+   with run commands for your executables. 
+	
+5. Commit the source files and updated Makefile to your repository.
+

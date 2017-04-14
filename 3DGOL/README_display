@@ -1,0 +1,33 @@
+
+The file "output000.vtk" is a small sample pf the vtk format to load onto a viewer
+such as Visit (which is on WOPR) it may be best to run the viewer locally.
+
+The vtk format is described in a PDF here: 
+
+http://vtk.org/VTK/img/file-formats.pdf
+
+
+If you write an output a file per update cycle and name each file 
+with an increasing integer they will play as an animation.
+
+"Visit" viewer  downloads for all common platforms:
+
+https://wci.llnl.gov/simulation/computer-codes/visit/executables
+
+
+1. Open data file from menu
+2. Click on Add icon (middle-left area of screen)
+   a. Volume (last selection)
+       - select alive data set
+3. Click on Draw icon (middle-right area of screen)
+4. Experiment with output (e.g., click and drag to rotate)
+
+
+###############################################################
+
+update 2015 May 20 
+Your classmate Ryan Bleile  <rbleile> has written a slimmed down VTK writer class in C++
+which he has generously made available to you.
+
+Trace Hagan <thagan> converted Ryan's method to C and makes it available here as VTK.c 
+
