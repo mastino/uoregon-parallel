@@ -1,5 +1,5 @@
 CC=icc
-CXX=icpc
+CXX=icpc -fPIC -I$(TBBROOT)/include
 CFLAGS=-g -O3
 CXXFLAGS=-g -O3
 
@@ -13,7 +13,7 @@ cilkNotQuiteRight: cilkNotQuiteRight.c
 	$(CC) $(CFLAGS) -o cilkNotQuiteRight cilkNotQuiteRight.c -lcilkrts
 
 tbbNotQuiteRight: tbbNotQuiteRight.cpp
-	$(CXX) $(CXXFLAGS) -o tbbNotQuiteRight tbbNotQuiteRight.cpp -ltbb
+	$(CXX) $(CXXFLAGS) -o tbbNotQuiteRight tbbNotQuiteRight.cpp -L$(TBBLIB) -ltbb
 
 check: cilkNotQuiteRight
 	@cilkNotQuiteRight 4

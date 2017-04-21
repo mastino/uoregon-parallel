@@ -5,6 +5,14 @@ all: mpWorld cilkWorld tbbWorld
 mpWorld: helloWorld.c
 	icc -o mpWorld helloWorld.c -fopenmp
 
+check:
+	export OMP_NUM_THREADS=1 &&	time ./mpWorld
+	export OMP_NUM_THREADS=2 &&	time ./mpWorld
+	export OMP_NUM_THREADS=4 &&	time ./mpWorld
+	export OMP_NUM_THREADS=8 &&	time ./mpWorld
+	export OMP_NUM_THREADS=16 &&	time ./mpWorld
+	export OMP_NUM_THREADS=32 &&	time ./mpWorld
+
 cilkWorld: cilkWorld.c
 	icc -o cilkWorld cilkWorld.c -lcilkrts
 
