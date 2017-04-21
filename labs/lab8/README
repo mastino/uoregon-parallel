@@ -43,3 +43,5 @@ exactly the same output). Your optimized versions should maintain this property.
 5. Optimize performance
 
 6. Commit the source files and updated Makefile to your repository.
+
+Due date/time is before lab in Week 10.

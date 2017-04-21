@@ -18,5 +18,6 @@ class Sayer_of_hello{
 
 int main()
 {
+ task_scheduler_init (10);
   parallel_for(blocked_range<int>(0, 10), Sayer_of_hello());
 }
