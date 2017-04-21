@@ -44,3 +44,5 @@ parallelism and add the Prewitt gradient filters to the image processing.
    blurring filter (not applying edge detection).
 
 8. Commit the source files, timing.txt, and updated Makefile to your repository.
+
+Due date/time is before lab in Week 9.
