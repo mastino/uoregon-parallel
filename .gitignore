@@ -1,2 +1,6 @@
 *~
 *.o
+
+*cilkWorld
+*mpWorld 
+*tbbWorld
