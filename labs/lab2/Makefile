@@ -1,17 +1,19 @@
 CC=icc
 CXX=icpc
+CFLAGS=-g -O3
+CXXFLAGS=-g -O3
 
 all: openmpNotQuiteRight cilkNotQuiteRight tbbNotQuiteRight
 
 
 openmpNotQuiteRight: openmpNotQuiteRight.c
-	$(CC) -o openmpNotQuiteRight openmpNotQuiteRight.c -fopenmp
+	$(CC) $(CFLAGS) -o openmpNotQuiteRight openmpNotQuiteRight.c -fopenmp
 
 cilkNotQuiteRight: cilkNotQuiteRight.c
-	$(CC) -o cilkNotQuiteRight cilkNotQuiteRight.c -lcilkrts
+	$(CC) $(CFLAGS) -o cilkNotQuiteRight cilkNotQuiteRight.c -lcilkrts
 
 tbbNotQuiteRight: tbbNotQuiteRight.cpp
-	$(CXX) -o tbbNotQuiteRight tbbNotQuiteRight.cpp -ltbb
+	$(CXX) $(CXXFLAGS) -o tbbNotQuiteRight tbbNotQuiteRight.cpp -ltbb
 
 check: cilkNotQuiteRight
 	@cilkNotQuiteRight 4
