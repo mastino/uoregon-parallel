@@ -1,4 +1,4 @@
-
+# Make sure you "module load tau/intel" before using this Makefile
 CC=icc
 
 # Instrument the code with TAU
