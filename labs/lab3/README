@@ -7,7 +7,8 @@ profiling data.
 
 Your grade on this lab is based on having checked in the profiles generated from
 using TAU on tauTest and a text file "readme.txt" containing insights you gained
-from looking at the performance data (not more than a paragraph).
+from looking at the performance data (not more than a paragraph). Make sure to run 
+with more than one thread.
 
 ################################################################################
 #  What to do
@@ -15,8 +16,13 @@ from looking at the performance data (not more than a paragraph).
 
 1. Pull files from the git repository if necessary.
 
-2. Compile and run with TAU.
+2. Compile and run with TAU (instrumentation-based profiling).
+   * Start by measuring just time
+   * Once that works, experiment with some PAPI hardware counters (papi_avail to see list of available ones)
+   * Use Paraprof to view the data; compute a derived metric, such as "cycles per instruction"
 
-3. Look at the profile data and write a paragraph about what you see in the data.
+2a. Optionally, repeat the measurements in step 2 on your own application.
+
+3.  Write briefly (1-3 paragraphs) about what you see in the data created in step 2 in a results.txt file, add, commit and push it to your lab3 directory in your bitbucket repo. 
 
 4. Due date is before lab in week 5.
