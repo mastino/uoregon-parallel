@@ -7,8 +7,9 @@ int fib(int fibMe){
   if(fibMe<2){
     return fibMe;
   }
-  int fib1m=cilk_spawn(fib(fibMe-1));
-  int fib2m=cilk_spawn(fib(fibMe-2));
+  int fib1m=cilk_spawn fib(fibMe-1);
+  int fib2m=fib(fibMe-2);
+  cilk_sync; 
   int retMe=fib1m+fib2m;
   return retMe;
 }
