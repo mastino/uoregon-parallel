@@ -7,7 +7,8 @@ profiling data.
 
 Your grade on this lab is based on having checked in the profiles generated from
 using TAU on tauTest and a text file "readme.txt" containing insights you gained
-from looking at the performance data (not more than a paragraph).
+from looking at the performance data (not more than a paragraph). Make sure to run 
+with more than one thread.
 
 ################################################################################
 #  What to do
