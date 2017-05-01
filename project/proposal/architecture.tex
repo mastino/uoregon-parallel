@@ -1,0 +1,5 @@
+\chapter*{Highlevel Architecture}
+
+\includegraphics[width=\textwidth]{./arch.png}
+
+In this diagram of the system architecture, it is obvious that the main area of interest for this project is the design and implementation of the object tracking portion of the system since it is in parallel. Although sources of parallelism exist in other aspects of the system those will be left for future work. The object tracking section can be parallelized by treating individual objects separately and by utilizing vector architectures to parallelize the underlying calculations.
