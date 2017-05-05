@@ -1,0 +1,8 @@
+Lab 3 Report
+Brian Gravelle
+
+For Lab 3 3 I measured the time, total cycles, and tot number of instructions completed for the provided code. From the later two measurements I derived the cycles per instruction (CPI) for the applicaiton. This experiment was performed once on NUC03.
+
+I was suprised to find that there was significant difference between the CPI calculated for the different threads. The main thread that initiated the computation had a higher CPI than that of the worker threads. When I dived deeper into the data I found that the MPI  portions had much higher CPI (2.2 ~ 2.4) than the actual computation (~ 0.5). As a results the main thread had a higher average CPI since more of its work involved the MPI overhead.
+
+Interestingly, the exclusive TAU aspects in the main section had a CPI of 0.7 while the TAU in the worker threads was around 2.3. I don't really have an explanation for this but found it intriguing.
