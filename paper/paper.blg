@@ -1,0 +1,12 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: paper.aux
+The style file: plain.bst
+Database file #1: filtering.bib
+Repeated entry---line 205 of file filtering.bib
+ : @article{menard2000assimilation
+ :                                ,
+I'm skipping whatever remains of this entry
+Warning--can't use both volume and number fields in cerati2015traditional
+Warning--can't use both volume and number fields in cerati2015kalman
+Warning--can't use both volume and number fields in rao1991fully
+Warning--empty journal in welch1995introduction
+(There was 1 error message)

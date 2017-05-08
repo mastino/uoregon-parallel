@@ -1,0 +1,27 @@
+\documentclass[12pt]{article}
+
+\title{A Survey of Parallelization of Kalman Filters}
+\author{
+       Brian J Gravelle 
+}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Kalman Filters have been an important aspect of many computer systems since they were first developed in the 1960s. Many of these applications require real-time speeds which has necessitated the parallelization of the Kalman filter from early in its development. This survey explores efforts to accelerate the algorithm with parallel techniques over the last 30 years  and discusses of the domains to which those parallelizations were applied. Many of the techniques are highly specialized to a particular domain so special care is given to how the parallelizations could be applied to different areas or are restricted to a specific application. Additionally, some discussion of future research is provided.
+\end{abstract}
+
+\section{Reference Notes}
+Included below are the references that will be used in the survey. Please note that several (\cite{blackman1986multiple, welch1995introduction, budhiraja2007survey, kalman1960new})  are included as background for Kalman filters while others (i.e. \cite{cerati2015kalman, cerati2016kalman, cerati2015traditional} and \cite{rao1991fully, spanos2005distributed, spanos2005approximate}) are closely related and will be discussed as a single unit in the paper.\\
+
+If you have any questions or comments on the proposed sources or would like copies of the PDFs please let me know.
+
+\nocite{*}
+
+\bibliographystyle{plain}
+\bibliography{filtering}
+
+\end{document}

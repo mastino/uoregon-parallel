@@ -1,0 +1,118 @@
+\begin{thebibliography}{10}
+
+\bibitem{blackman1986multiple}
+Samuel~S Blackman.
+\newblock Multiple-target tracking with radar applications.
+\newblock {\em Dedham, MA, Artech House, Inc., 1986, 463 p.}, 1986.
+
+\bibitem{bonato2009floating}
+Vanderlei Bonato, Eduardo Marques, and George~A Constantinides.
+\newblock A floating-point extended kalman filter implementation for autonomous
+  mobile robots.
+\newblock {\em Journal of Signal Processing Systems}, 56(1):41--50, 2009.
+
+\bibitem{budhiraja2007survey}
+Amarjit Budhiraja, Lingji Chen, and Chihoon Lee.
+\newblock A survey of numerical methods for nonlinear filtering problems.
+\newblock {\em Physica D: Nonlinear Phenomena}, 230(1):27--36, 2007.
+
+\bibitem{cerati2016kalman}
+Giuseppe Cerati, Peter Elmer, Slava Krutelyov, Steven Lantz, Matthieu Lefebvre,
+  Kevin McDermott, Daniel Riley, Matev{\v{z}} Tadel, Peter Wittich, Frank
+  W{\"u}rthwein, et~al.
+\newblock Kalman filter tracking on parallel architectures.
+\newblock In {\em EPJ Web of Conferences}, volume 127, page 00010. EDP
+  Sciences, 2016.
+
+\bibitem{cerati2015traditional}
+Giuseppe Cerati, Peter Elmer, Steven Lantz, Ian MacNeill, Kevin McDermott, Dan
+  Riley, Matev{\v{z}} Tadel, Peter Wittich, Frank W{\"u}rthwein, and Avi Yagil.
+\newblock Traditional tracking with kalman filter on parallel architectures.
+\newblock In {\em Journal of Physics: Conference Series}, volume 608, page
+  012057. IOP Publishing, 2015.
+
+\bibitem{cerati2015kalman}
+Giuseppe Cerati, Peter Elmer, Steven Lantz, Kevin McDermott, Dan Riley,
+  Matev{\v{z}} Tadel, Peter Wittich, Frank W{\"u}rthwein, and Avi Yagil.
+\newblock Kalman filter tracking on parallel architectures.
+\newblock In {\em Journal of Physics: Conference Series}, volume 664, page
+  072008. IOP Publishing, 2015.
+
+\bibitem{hashemipour1988decentralized}
+Hamid~R Hashemipour, Sumit Roy, and Alan~J Laub.
+\newblock Decentralized structures for parallel kalman filtering.
+\newblock {\em IEEE Transactions on Automatic Control}, 33(1):88--94, 1988.
+
+\bibitem{kalman1960new}
+Rudolph~Emil Kalman et~al.
+\newblock A new approach to linear filtering and prediction problems.
+\newblock {\em Journal of basic Engineering}, 82(1):35--45, 1960.
+
+\bibitem{karimipour2015extended}
+Hadis Karimipour and Venkata Dinavahi.
+\newblock Extended kalman filter-based parallel dynamic state estimation.
+\newblock {\em IEEE transactions on smart grid}, 6(3):1539--1549, 2015.
+
+\bibitem{liu2007efficient}
+Yang Liu, Christos-Savvas Bouganis, and Peter~YK Cheung.
+\newblock Efficient mapping of a kalman filter into an fpga using taylor
+  expansion.
+\newblock In {\em Field Programmable Logic and Applications, 2007. FPL 2007.
+  International Conference on}, pages 345--350. IEEE, 2007.
+
+\bibitem{lyster1997parallel}
+PM~Lyster, SE~Cohn, R~Menard, LP~Chang, SJ~Lin, and RG~Olsen.
+\newblock Parallel implementation of a kalman filter for constituent data
+  assimilation.
+\newblock {\em Monthly weather review}, 125(7):1674--1686, 1997.
+
+\bibitem{menard2000assimilation}
+Richard M{\'e}nard, Stephen~E Cohn, Lang-Ping Chang, and Peter~M Lyster.
+\newblock Assimilation of stratospheric chemical tracer observations using a
+  kalman filter. part i: Formulation.
+\newblock {\em Monthly weather review}, 128(8):2654--2671, 2000.
+
+\bibitem{palis1990parallel}
+Michael~A Palis and Donald~K Krecker.
+\newblock Parallel kalman filtering on the connection machine.
+\newblock In {\em Frontiers of Massively Parallel Computation, 1990.
+  Proceedings., 3rd Symposium on the}, pages 55--58. IEEE, 1990.
+
+\bibitem{rao1991fully}
+BS~Rao and Hugh~F Durrant-Whyte.
+\newblock Fully decentralised algorithm for multisensor kalman filtering.
+\newblock In {\em IEE Proceedings D (Control Theory and Applications)}, volume
+  138, pages 413--420. IET, 1991.
+
+\bibitem{rosen2013parallelization}
+Olov Ros{\'e}n, Alexander Medvedev, and Torbj{\"o}rn Wigren.
+\newblock Parallelization of the kalman filter on multicore computational
+  platforms.
+\newblock {\em Control Engineering Practice}, 21(9):1188--1194, 2013.
+
+\bibitem{Shaffer:1987:IPE:42040.42101}
+P.~L. Shaffer.
+\newblock Implementation of a parallel extended kalman filter using a
+  bit-serial silicon compiler.
+\newblock In {\em Proceedings of the 1987 Fall Joint Computer Conference on
+  Exploring Technology: Today and Tomorrow}, ACM '87, pages 327--334, Los
+  Alamitos, CA, USA, 1987. IEEE Computer Society Press.
+
+\bibitem{spanos2005approximate}
+Demetri~P Spanos, Reza Olfati-Saber, and Richard~M Murray.
+\newblock Approximate distributed kalman filtering in sensor networks with
+  quantifiable performance.
+\newblock In {\em Information Processing in Sensor Networks, 2005. IPSN 2005.
+  Fourth International Symposium on}, pages 133--139. Ieee, 2005.
+
+\bibitem{spanos2005distributed}
+Demetri~P Spanos, Reza Olfati-Saber, and Richard~M Murray.
+\newblock Distributed sensor fusion using dynamic consensus.
+\newblock In {\em IFAC World Congress}. Citeseer, 2005.
+
+\bibitem{welch1995introduction}
+Greg Welch and Gary Bishop.
+\newblock An introduction to the kalman filter.
+\newblock 1995.
+
+\end{thebibliography}

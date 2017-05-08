@@ -1,0 +1,251 @@
+% Brian Gravelle
+% bib for Parallel Computering survey paper
+% Spring 2017
+
+
+%%%%%%%%%%%%%%%%    Basics     %%%%%%%%%%%%%%%
+
+% MTT book
+@article{blackman1986multiple,
+  title={Multiple-target tracking with radar applications},
+  author={Blackman, Samuel S},
+  journal={Dedham, MA, Artech House, Inc., 1986, 463 p.},
+  year={1986}
+}
+
+% Tutorial
+@article{welch1995introduction,
+  title={An introduction to the Kalman filter},
+  author={Welch, Greg and Bishop, Gary},
+  year={1995}
+}
+
+
+% survey of various filters
+@article{budhiraja2007survey,
+  title={A survey of numerical methods for nonlinear filtering problems},
+  author={Budhiraja, Amarjit and Chen, Lingji and Lee, Chihoon},
+  journal={Physica D: Nonlinear Phenomena},
+  volume={230},
+  number={1},
+  pages={27--36},
+  year={2007},
+  publisher={Elsevier}
+}
+
+% the original paper
+@article{kalman1960new,
+  title={A new approach to linear filtering and prediction problems},
+  author={Kalman, Rudolph Emil and others},
+  journal={Journal of basic Engineering},
+  volume={82},
+  number={1},
+  pages={35--45},
+  year={1960}
+}
+
+%%%%%%%%%%%%%%%%    Physics    %%%%%%%%%%%%%%%
+
+% These are all basically the same
+% discuss Kalman and HEP; in particular tracking particles at the LHC
+@inproceedings{cerati2015kalman,
+  title={Kalman Filter Tracking on Parallel Architectures},
+  author={Cerati, Giuseppe and Elmer, Peter and Lantz, Steven and McDermott, Kevin and Riley, Dan and Tadel, Matev{\v{z}} and Wittich, Peter and W{\"u}rthwein, Frank and Yagil, Avi},
+  booktitle={Journal of Physics: Conference Series},
+  volume={664},
+  number={7},
+  pages={072008},
+  year={2015},
+  organization={IOP Publishing}
+}
+@inproceedings{cerati2016kalman,
+  title={Kalman Filter Tracking on Parallel Architectures},
+  author={Cerati, Giuseppe and Elmer, Peter and Krutelyov, Slava and Lantz, Steven and Lefebvre, Matthieu and McDermott, Kevin and Riley, Daniel and Tadel, Matev{\v{z}} and Wittich, Peter and W{\"u}rthwein, Frank and others},
+  booktitle={EPJ Web of Conferences},
+  volume={127},
+  pages={00010},
+  year={2016},
+  organization={EDP Sciences}
+}
+@inproceedings{cerati2015traditional,
+  title={Traditional Tracking with Kalman Filter on Parallel Architectures},
+  author={Cerati, Giuseppe and Elmer, Peter and Lantz, Steven and MacNeill, Ian and McDermott, Kevin and Riley, Dan and Tadel, Matev{\v{z}} and Wittich, Peter and W{\"u}rthwein, Frank and Yagil, Avi},
+  booktitle={Journal of Physics: Conference Series},
+  volume={608},
+  number={1},
+  pages={012057},
+  year={2015},
+  organization={IOP Publishing}
+}
+
+%%%%%%%%%%%%%%%%   Cell Phones     %%%%%%%%%%%%%%
+% parallel kalman for some cell phone thing
+% WCDMA 
+@article{rosen2013parallelization,
+  title={Parallelization of the Kalman filter on multicore computational platforms},
+  author={Ros{\'e}n, Olov and Medvedev, Alexander and Wigren, Torbj{\"o}rn},
+  journal={Control Engineering Practice},
+  volume={21},
+  number={9},
+  pages={1188--1194},
+  year={2013},
+  publisher={Elsevier}
+}
+
+
+%%%%%%%%%%%%%%%%   Power grid     %%%%%%%%%%%%%%
+@article{karimipour2015extended,
+  title={Extended kalman filter-based parallel dynamic state estimation},
+  author={Karimipour, Hadis and Dinavahi, Venkata},
+  journal={IEEE transactions on smart grid},
+  volume={6},
+  number={3},
+  pages={1539--1549},
+  year={2015},
+  publisher={IEEE}
+}
+
+
+
+%%%%%%%%%%%%%%%%       Old       %%%%%%%%%%%%%%
+
+% parallelizing kalman filter for target tracking
+% two methods
+%     systolic architecture
+%     pipelined synchronous dataflow
+@inproceedings{Shaffer:1987:IPE:42040.42101,
+ author = {Shaffer, P. L.},
+ title = {Implementation of a Parallel Extended Kalman Filter Using a Bit-serial Silicon Compiler},
+ booktitle = {Proceedings of the 1987 Fall Joint Computer Conference on Exploring Technology: Today and Tomorrow},
+ series = {ACM '87},
+ year = {1987},
+ isbn = {0-8186-0811-0},
+ location = {Dallas, Texas, USA},
+ pages = {327--334},
+ numpages = {8},
+ url = {http://dl.acm.org/citation.cfm?id=42040.42101},
+ acmid = {42101},
+ publisher = {IEEE Computer Society Press},
+ address = {Los Alamitos, CA, USA},
+} 
+
+% running a kalman filter on some early cluster
+@inproceedings{palis1990parallel,
+  title={Parallel Kalman filtering on the connection machine},
+  author={Palis, Michael A and Krecker, Donald K},
+  booktitle={Frontiers of Massively Parallel Computation, 1990. Proceedings., 3rd Symposium on the},
+  pages={55--58},
+  year={1990},
+  organization={IEEE}
+}
+
+
+%%%%%%%%%%%%%%%%       Sensors      %%%%%%%%%%%%%%
+
+% distribution of kalman filter across multiple sensors
+% also involves some camera stuff
+@inproceedings{rao1991fully,
+  title={Fully decentralised algorithm for multisensor Kalman filtering},
+  author={Rao, BS and Durrant-Whyte, Hugh F},
+  booktitle={IEE Proceedings D (Control Theory and Applications)},
+  volume={138},
+  number={5},
+  pages={413--420},
+  year={1991},
+  organization={IET}
+}
+
+% Uses kalman filtering as example of distributing measurements
+@inproceedings{spanos2005distributed,
+  title={Distributed sensor fusion using dynamic consensus},
+  author={Spanos, Demetri P and Olfati-Saber, Reza and Murray, Richard M},
+  booktitle={IFAC World Congress},
+  year={2005},
+  organization={Citeseer}
+}
+
+% analysis of the above systems
+@inproceedings{spanos2005approximate,
+  title={Approximate distributed Kalman filtering in sensor networks with quantifiable performance},
+  author={Spanos, Demetri P and Olfati-Saber, Reza and Murray, Richard M},
+  booktitle={Information Processing in Sensor Networks, 2005. IPSN 2005. Fourth International Symposium on},
+  pages={133--139},
+  year={2005},
+  organization={Ieee}
+}
+
+% kalman for multisensor networks 
+@article{hashemipour1988decentralized,
+  title={Decentralized structures for parallel Kalman filtering},
+  author={Hashemipour, Hamid R and Roy, Sumit and Laub, Alan J},
+  journal={IEEE Transactions on Automatic Control},
+  volume={33},
+  number={1},
+  pages={88--94},
+  year={1988},
+  publisher={IEEE}
+}
+
+%%%%%%%%%%%%%%%%       Climate      %%%%%%%%%%%%%%
+
+% climate 1 the formulation of the thing
+% covers the math bits
+@article{menard2000assimilation,
+  title={Assimilation of stratospheric chemical tracer observations using a Kalman filter. Part I: Formulation},
+  author={M{\'e}nard, Richard and Cohn, Stephen E and Chang, Lang-Ping and Lyster, Peter M},
+  journal={Monthly weather review},
+  volume={128},
+  number={8},
+  pages={2654--2671},
+  year={2000}
+}
+
+% climate 1 the validation
+% covers the experimental bits
+@article{menard2000assimilation,
+  title={Assimilation of stratospheric chemical tracer observations using a Kalman filter. Part II: $\chi$ 2-validated results and analysis of variance and correlation dynamics},
+  author={M{\'e}nard, Richard and Chang, Lang-Ping},
+  journal={Monthly weather review},
+  volume={128},
+  number={8},
+  pages={2672--2686},
+  year={2000}
+}
+
+% parallel implementation of a Kalman filter
+% distributed memory mpessage passing
+% intended for climate stuff
+@article{lyster1997parallel,
+  title={Parallel implementation of a Kalman filter for constituent data assimilation},
+  author={Lyster, PM and Cohn, SE and Menard, R and Chang, LP and Lin, SJ and Olsen, RG},
+  journal={Monthly weather review},
+  volume={125},
+  number={7},
+  pages={1674--1686},
+  year={1997}
+}
+
+
+%%%%%%%%%%%%%%%%   FPGA     %%%%%%%%%%%%%%
+
+% kalman on an FPGA
+@inproceedings{liu2007efficient,
+  title={Efficient mapping of a Kalman filter into an FPGA using Taylor expansion},
+  author={Liu, Yang and Bouganis, Christos-Savvas and Cheung, Peter YK},
+  booktitle={Field Programmable Logic and Applications, 2007. FPL 2007. International Conference on},
+  pages={345--350},
+  year={2007},
+  organization={IEEE}
+}
+
+% other kalman on an FPGA
+@article{bonato2009floating,
+  title={A floating-point extended kalman filter implementation for autonomous mobile robots},
+  author={Bonato, Vanderlei and Marques, Eduardo and Constantinides, George A},
+  journal={Journal of Signal Processing Systems},
+  volume={56},
+  number={1},
+  pages={41--50},
+  year={2009},
+  publisher={Springer}
+}
