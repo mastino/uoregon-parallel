@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <omp.h>
 
 #include <openssl/md5.h>
 
@@ -51,18 +52,43 @@ char * password(char * passmatch, char * digest, long element)
 //        passmatch = memory buffer used in computing password
 //        digest = the hash to be located
 //        max_val = the bggest value to try?
-char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest, long max_val)
-{
-   long element;
-   char * match = NULL;
+char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest, long max_val) {
 
-   /* map the function across the input "collection" (in this case generated from max_val) */
-   for (element = 0; element <= max_val; element++) {
-      match = fp(passmatch, digest, element);
-      if (match != NULL) return match;    /* the reduction returns a value, not a collection */
-   }
+ long element;
+ int nthreads = omp_get_num_threads();
+ int i, threadn;
+ char* buffer;
+ char* match;
+ char done = 0;
 
-   return match;
+  #pragma omp parallel private(threadn, match, i, buffer) shared(done)
+  {
+
+  buffer = (char*)malloc(9*sizeof(char));
+  threadn = omp_get_thread_num();
+
+  #pragma omp for 
+  for (element = 0; element <= max_val; element++) {
+    if(done == 0) {
+        match = fp(buffer, digest, element);
+        if ((match != NULL) && (done == 0)) {
+          #pragma omp critical
+          {
+          for(i = 0; i < 9; i++) passmatch[i] = match[i];
+          done = 1;
+          }
+        }
+    }
+  }
+
+  free(buffer);
+  }
+
+
+  if(done != 0)
+    return passmatch;
+  else
+    return NULL;
 }
 
 int main(int argc, char** argv)
@@ -77,7 +103,7 @@ int main(int argc, char** argv)
     match = map_reduce(password, passmatch, argv[1], 99999999); // match aliases passmatch if found
 
     if (match == NULL) {
-       printf("\nERROR password not found for: %s\n\n", argv[0]);
+       printf("\nERROR password not found for: %s\n\n", argv[1]);
     } else {
        printf("\nSUCCESS found: %s\n\n", match);
     }

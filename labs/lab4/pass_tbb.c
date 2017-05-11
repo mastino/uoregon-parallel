@@ -35,7 +35,6 @@ void genpass(long passnum, char* passbuff) {
 }
 
 /* Return the password if matched successfully, NULL otherwise */
-// return is an alias of passmatch if a match is found
 char * password(char * passmatch, char * digest, long element)
 {
    genpass(element, passmatch);
@@ -74,7 +73,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    match = map_reduce(password, passmatch, argv[1], 99999999); // match aliases passmatch if found
+    match = map_reduce(password, passmatch, argv[1], 99999999);
 
     if (match == NULL) {
        printf("\nERROR password not found for: %s\n\n", argv[0]);
