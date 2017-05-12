@@ -11,7 +11,7 @@ pass_omp: pass_omp.c
 	
 	
 pass_cilk: pass_cilk.c
-	
+	$(CC) -o pass_cilk pass_cilk.c -lcilkrts -lcrypto
 
 pass_tbb: pass_tbb.c
 	
@@ -20,15 +20,16 @@ pass_serial: pass_serial.c
 	$(CC) -o pass_serial pass_serial.c -lcrypto
 
 check_serial: pass_serial
-	@pass_serial 1120bfa29a3a834428dc477b68e2c872
+	./pass_serial 1120bfa29a3a834428dc477b68e2c872
+	./pass_serial 1120bfa29a3a834428dc477b68e77777
 
 check_omp: pass_omp
-	time ./pass_omp 1120bfa29a3a834428dc477b68e2c872
-	time ./pass_omp 1120bfa29a3a834428dc477b68e77777
-	time ./pass_serial 1120bfa29a3a834428dc477b68e2c872
-	time ./pass_serial 1120bfa29a3a834428dc477b68e77777
+	./pass_omp 1120bfa29a3a834428dc477b68e2c872
+	./pass_omp 1120bfa29a3a834428dc477b68e77777
 
 check_cilk: pass_cilk 
+	./pass_cilk 1120bfa29a3a834428dc477b68e2c872
+	./pass_cilk 1120bfa29a3a834428dc477b68e77777
 	
 
 check_tbb: pass_tbb
