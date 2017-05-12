@@ -2,8 +2,18 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <tbb/tbb.h>
 
 #include <openssl/md5.h>
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <tbb/tbb.h>
+#include <pthread.h>
+
+using namespace tbb;
+using namespace std;
 
 const char* chars="0123456789";
 
@@ -52,16 +62,34 @@ char * password(char * passmatch, char * digest, long element)
 //        max_val = the bggest value to try?
 char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest, long max_val)
 {
-   long element;
-   char * match = NULL;
+  char done = 0;
+  pthread_mutex_t d;
 
-   /* map the function across the input "collection" (in this case generated from max_val) */
-   for (element = 0; element <= max_val; element++) {
-      match = fp(passmatch, digest, element);
-      if (match != NULL) return match;    /* the reduction returns a value, not a collection */
-   }
 
-   return match;
+  task_scheduler_init (10);
+  parallel_for( blocked_range<long>(0, max_val),
+    [&]( const blocked_range<long> &r ) {          
+        char buffer[9];
+        char* match;
+        int i;
+        for(long element = r.begin(), el_end = r.end(); element <= el_end; element++){ 
+
+          if(done == 0) {
+              match = fp(buffer, digest, element);
+              if ((match != NULL) && (done == 0)) {
+                pthread_mutex_lock(&d);
+                for(i = 0; i < 9; i++) passmatch[i] = match[i];
+                done = 1;
+                pthread_mutex_unlock(&d);
+              }
+          }
+        } 
+    });
+
+  if(done != 0)
+    return passmatch;
+  else
+    return NULL;
 }
 
 int main(int argc, char** argv)

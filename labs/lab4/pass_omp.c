@@ -57,18 +57,12 @@ char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest
  long element;
  int nthreads = omp_get_num_threads();
  int i, threadn;
- char* buffer;
- char* match;
  char done = 0;
 
-  #pragma omp parallel private(threadn, match, i, buffer) shared(done)
-  {
-
-  buffer = (char*)malloc(9*sizeof(char));
-  threadn = omp_get_thread_num();
-
-  #pragma omp for 
+  #pragma omp parallel for private(threadn, i) shared(done)
   for (element = 0; element <= max_val; element++) {
+   char buffer[9];
+   char* match;
     if(done == 0) {
         match = fp(buffer, digest, element);
         if ((match != NULL) && (done == 0)) {
@@ -80,10 +74,6 @@ char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest
         }
     }
   }
-
-  free(buffer);
-  }
-
 
   if(done != 0)
     return passmatch;

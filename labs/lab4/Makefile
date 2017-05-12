@@ -13,8 +13,8 @@ pass_omp: pass_omp.c
 pass_cilk: pass_cilk.c
 	$(CC) -o pass_cilk pass_cilk.c -lcilkrts -lcrypto
 
-pass_tbb: pass_tbb.c
-	
+pass_tbb: pass_tbb.cpp
+	icpc -std=c++11 -fPIC -I$(TBBROOT)/include -o pass_tbb pass_tbb.cpp -L$(TBBLIB) -ltbb -lcrypto
 
 pass_serial: pass_serial.c
 	$(CC) -o pass_serial pass_serial.c -lcrypto
@@ -33,6 +33,8 @@ check_cilk: pass_cilk
 	
 
 check_tbb: pass_tbb
+	./pass_tbb 1120bfa29a3a834428dc477b68e2c872
+	./pass_tbb 1120bfa29a3a834428dc477b68e77777
 	
 
 clean:

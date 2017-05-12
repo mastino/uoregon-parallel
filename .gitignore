@@ -5,6 +5,12 @@
 *mpWorld 
 *tbbWorld
 *tauTest
+*pass_serial
+*pass_omp 
+*pass_tbb 
+*pass_cilk
 
 */profile.*
+*MULT*
 
+*pass_serial
