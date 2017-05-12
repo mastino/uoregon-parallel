@@ -66,6 +66,7 @@ char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest
   pthread_mutex_t d;
 
 
+  pthread_mutex_init(&d, NULL);
   task_scheduler_init (10);
   parallel_for( blocked_range<long>(0, max_val),
     [&]( const blocked_range<long> &r ) {          
