@@ -65,7 +65,7 @@ char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest
    char* match;
     if(done == 0) {
         match = fp(buffer, digest, element);
-        if ((match != NULL) && (done == 0)) {
+        if ((done == 0) && (match != NULL)) {
           #pragma omp critical
           {
           for(i = 0; i < 9; i++) passmatch[i] = match[i];

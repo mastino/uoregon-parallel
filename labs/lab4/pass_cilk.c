@@ -65,16 +65,16 @@ char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest
 
   pthread_mutex_init(&d, NULL);
   cilk_for (element = 0; element <= max_val; element++) {
-    char buffer[9];
-    char* match;
     if(done == 0) {
-        match = fp(buffer, digest, element);
-        if ((match != NULL) && (done == 0)) {
-          pthread_mutex_lock(&d);
-          for(i = 0; i < 9; i++) passmatch[i] = match[i];
-          done = 1;
-          pthread_mutex_unlock(&d);
-        }
+      char buffer[9];
+      char* match;
+      match = fp(buffer, digest, element);
+      if ((done == 0) && (match != NULL)) {
+        pthread_mutex_lock(&d);
+        for(i = 0; i < 9; i++) passmatch[i] = match[i];
+        done = 1;
+        pthread_mutex_unlock(&d);
+      }
     }
   }
 
