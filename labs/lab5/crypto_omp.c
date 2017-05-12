@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <omp.h>
 
 // utility function: given a list of keys, a list of files to pull them from, 
 // and the number of keys -> pull the keys out of the files, allocating memory 
@@ -39,10 +40,11 @@ void encode(
 	int numKeys
 ) {
 
-  int keyLoop=0;
-  int charLoop=0;
+  int keyLoop = 0;
+  int charLoop = 0;
   
-  for(charLoop=0; charLoop<ptextlen; charLoop++) {
+  #pragma omp parallel for private(keyLoop)
+  for(charLoop = 0; charLoop < ptextlen; charLoop++) {
 
     char cipherChar=plainText[charLoop]; 
     for(keyLoop=0; keyLoop<numKeys; keyLoop++) {

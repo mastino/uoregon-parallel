@@ -17,7 +17,7 @@ int test(const char* passhash, const char* passcandidate) {
     char mdString[34];
     mdString[33]='\0';
     for(int i=0; i<16; i++) {
-        sprintf(&mdString[i*2], "%02x", (unsigned char)digest[i]);
+      sprintf(&mdString[i*2], "%02x", (unsigned char)digest[i]);
     }
     
     return strncmp(passhash, mdString, strlen(passhash));
