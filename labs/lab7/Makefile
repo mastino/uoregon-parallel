@@ -6,7 +6,7 @@ stencil_serial: stencil_serial.cpp
 stencil_openmp: 
 
 check_serial: stencil_serial
-	@stencil_serial image.jpg
+	@./stencil_serial image.jpg
 
 check_openmp:
 

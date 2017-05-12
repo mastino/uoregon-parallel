@@ -16,16 +16,16 @@ matmul_tbb:
 
 
 check_serial: matmul_serial
-	matmul_serial 
+	./matmul_serial 
 
 check_omp: matmul_omp
-	matmul_omp
+	./matmul_omp
 
 check_cilk: matmul_cilk
-	matmul_cilk
+	./matmul_cilk
 
 check_tbb: matmul_tbb
-	matmul_tbb
+	./matmul_tbb
 
 
 clean:

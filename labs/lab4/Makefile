@@ -20,8 +20,12 @@ pass_serial: pass_serial.c
 	$(CC) -o pass_serial pass_serial.c -lcrypto
 
 check_serial: pass_serial
+<<<<<<< HEAD
 	./pass_serial 1120bfa29a3a834428dc477b68e2c872
 	./pass_serial 1120bfa29a3a834428dc477b68e77777
+=======
+	@./pass_serial 1120bfa29a3a834428dc477b68e2c872
+>>>>>>> 8381863b2ac0b87cb59176985e2dd5bdfdafb1b8
 
 check_omp: pass_omp
 	./pass_omp 1120bfa29a3a834428dc477b68e2c872
