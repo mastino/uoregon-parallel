@@ -20,25 +20,21 @@ pass_serial: pass_serial.c
 	$(CC) -o pass_serial pass_serial.c -lcrypto
 
 check_serial: pass_serial
-<<<<<<< HEAD
 	./pass_serial 1120bfa29a3a834428dc477b68e2c872
-	./pass_serial 1120bfa29a3a834428dc477b68e77777
-=======
-	@./pass_serial 1120bfa29a3a834428dc477b68e2c872
->>>>>>> 8381863b2ac0b87cb59176985e2dd5bdfdafb1b8
+	./pass_serial 5a959f9367123122554aa990b0363808
 
 check_omp: pass_omp
 	./pass_omp 1120bfa29a3a834428dc477b68e2c872
-	./pass_omp 1120bfa29a3a834428dc477b68e77777
+	./pass_omp 5a959f9367123122554aa990b0363808
 
 check_cilk: pass_cilk 
 	./pass_cilk 1120bfa29a3a834428dc477b68e2c872
-	./pass_cilk 1120bfa29a3a834428dc477b68e77777
+	./pass_cilk 5a959f9367123122554aa990b0363808
 	
 
 check_tbb: pass_tbb
 	./pass_tbb 1120bfa29a3a834428dc477b68e2c872
-	./pass_tbb 1120bfa29a3a834428dc477b68e77777
+	./pass_tbb 5a959f9367123122554aa990b0363808
 	
 
 clean:

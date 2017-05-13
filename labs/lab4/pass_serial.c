@@ -57,7 +57,7 @@ char * map_reduce( char* (fp)(char*,char*,long), char * passmatch, char * digest
    char * match = NULL;
 
    /* map the function across the input "collection" (in this case generated from max_val) */
-   for (element = max_val; element >= 0; element--) {
+   for (element = 0; element <= max_val; element++) {
       match = fp(passmatch, digest, element);
       if (match != NULL) return match;    /* the reduction returns a value, not a collection */
    }
