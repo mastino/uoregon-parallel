@@ -16,3 +16,9 @@
 *pass_serial
 
 *.encode
+
+
+*crypto_omp
+*crypto_tbb
+*crypto_cilk
+
