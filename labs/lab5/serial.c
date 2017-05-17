@@ -97,8 +97,10 @@ int main(int argc, char* argv[]) {
     }
   }
  
-  if (err == 0) 
+  if (err == 0) {
     fwrite (cypherText, 1, textLength, stdout);
+    fflush(stdout);
+  }
   
   return err;
 
