@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
   }
  
   if (err == 0) 
-  	printf ("%s", cypherText);
+    fwrite (cypherText, 1, textLength, stdout);
   
   return err;
 
