@@ -122,6 +122,11 @@ int main(int argc, char **argv) {
 	if (! correct) {
 		fprintf(stderr,"\n Errors in multiplication");
 		err = 1;
-	}
+	} else {
+        fprintf(stdout,"\n SUCCESS : results match");
+    }
+    fflush(stdout);
+    fflush(stderr);
+
 	return err;
 }
