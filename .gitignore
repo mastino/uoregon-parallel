@@ -9,6 +9,11 @@
 *pass_omp 
 *pass_tbb 
 *pass_cilk
+*cipher_serial
+*crypto_serial
+*crypto_omp
+*crypto_tbb
+*crypto_cilk
 
 */profile.*
 *MULT*
@@ -16,9 +21,7 @@
 *pass_serial
 
 *.encode
+*.html
 
 
-*crypto_omp
-*crypto_tbb
-*crypto_cilk
 
