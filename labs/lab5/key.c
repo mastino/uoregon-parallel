@@ -5,7 +5,7 @@
 
 //return byte from key at offset "position"
 char getBit(xorKey *skey, int position) {
-   return skey->myKey[position%skey->myKeyLength];
+   return skey->myKey[position % skey->myKeyLength];
 } 
 
 //utility function to generate a key of length "length"

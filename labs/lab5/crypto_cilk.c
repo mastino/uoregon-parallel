@@ -8,6 +8,10 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include <cilk/cilk.h>
+#include <pthread.h>
+#include <unistd.h>
+
 // utility function: given a list of keys, a list of files to pull them from, 
 // and the number of keys -> pull the keys out of the files, allocating memory 
 // as needed
@@ -39,13 +43,13 @@ void encode(
 	int numKeys
 ) {
 
-  int keyLoop=0;
   int charLoop=0;
   
-  for(charLoop=0; charLoop<ptextlen; charLoop++) {
+  cilk_for(charLoop=0; charLoop < ptextlen; charLoop++) {
 
+    int keyLoop=0;
     char cipherChar=plainText[charLoop]; 
-    for(keyLoop=0; keyLoop<numKeys; keyLoop++) {
+    for(keyLoop=0; keyLoop < numKeys; keyLoop++) {
        cipherChar = (*functionPtr) (cipherChar, getBit( &(keyList[keyLoop]), charLoop));
     }
 
@@ -103,7 +107,7 @@ int main(int argc, char* argv[]) {
   }
  
   if (err == 0) 
-  	printf ("%s", cypherText);
+    fwrite (cypherText, sizeof(char), textLength, stdout);
   
   return err;
 
