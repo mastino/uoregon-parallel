@@ -13,37 +13,57 @@
 
 */
 
- #include "linear_algebra.h"
- #include <stdio.h>
+#include "linear_algebra.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <omp.h>
+#include <time.h>
 
-void test_inverse();
-void test_cofactor();
-void test_multiply();
-void test_add();
-void test_transpose();
-void test_determinant();
-void test_determinant_recur();
-void test_zero_and_id();
-void test_compute_LUP();
-void test_compute_LUP_inline();
+void test_inverse(double* mat_a, double* mat_b, double* mat_c, long side_len);
+void test_cofactor(double* mat_a, double* mat_b, double* mat_c, long side_len);
+void test_multiply(double* mat_a, double* mat_b, double* mat_c, long side_len);
+void test_add(double* mat_a, double* mat_b, double* mat_c, long side_len);
+void test_transpose(double* mat_a, double* mat_b, double* mat_c, long side_len);
+void test_determinant(double* mat_a, long side_len);
+void test_zero_and_id(double* mat_a, double* mat_b, double* mat_c, long side_len);
+void test_compute_LUP(double* mat_a, double* mat_b, double* mat_c, long side_len);
+void test_compute_LUP_inline(double* mat_a, double* mat_b, double* mat_c, long side_len);
+
+void allocate_mats(double** mat_a, double** mat_b, double** mat_c, long side_len);
+void init_mats(double* mat_a, double* mat_b, double* mat_c, long side_len);
+void free_mats(double* mat_a, double* mat_b, double* mat_c);
 
 int main(int argc, char **argv) {
   
+  double *mat_a, *mat_b, *mat_c;
+  long side_len = 100; //TODO get from command line
+
+  if(argc >= 2) {
+    side_len = atoi(argv[1]);
+  }
+
+  allocate_mats(&mat_a, &mat_b, &mat_c, side_len);
+  if( (mat_a == NULL) || (mat_b == NULL) || (mat_c == NULL) ) {
+    printf("ERROR: not enough memory\n");
+    exit(1);
+  }
+  init_mats(mat_a, mat_b, mat_c, side_len);
+
   // test_zero_and_id();
   // test_inverse();
   // test_cofactor();
-  test_determinant();
-  // test_determinant_recur();
+  test_determinant(mat_a, side_len);
   // test_transpose();
   // test_add();
   // test_multiply();
   // test_compute_LUP();
   // test_compute_LUP_inline();
 
+  free_mats(mat_a, mat_b, mat_c);
   return 0;
 }
 
-void test_add() {
+void test_add(double* mat_a, double* mat_b, double* mat_c, long side_len) {
   int col_A = 3, row_A = 3;
   double A[] = {2,2,2,
                 2,2,2,
@@ -74,7 +94,7 @@ void test_add() {
   printf("\n");
 }
 
-void test_multiply() {
+void test_multiply(double* mat_a, double* mat_b, double* mat_c, long side_len) {
   int col_A = 3, row_A = 3;
   double A[] = {1,2,3,
                 4,5,6,
@@ -105,7 +125,7 @@ void test_multiply() {
   printf("\n");
 }
 
-void test_transpose() {
+void test_transpose(double* mat_a, double* mat_b, double* mat_c, long side_len) {
   int col_A = 3, row_A = 4;
   double A[] = {1, 2, 3,
                 4, 5, 6,
@@ -130,7 +150,7 @@ void test_transpose() {
   printf("\n");
 }
 
-void test_zero_and_id() {
+void test_zero_and_id(double* mat_a, double* mat_b, double* mat_c, long side_len) {
   int col_A = 3, row_A = 3;
   double A[] = {1, 2, 3,
                 4, 5, 6,
@@ -151,68 +171,14 @@ void test_zero_and_id() {
   printf("\n");
 }
 
-void test_determinant() {
-  int col_A = 2, row_A = 2; // 6
-  double A[] = {6,-3,
-                2, 0};
-                
-  int col_B = 3, row_B = 3; //20
-  double B[] = {3,2,-1,
-                1,0,-2,
-                4,6,-3};
-                
-  int col_C = 4, row_C = 4; //20
-  double C[] = {3,0,2,-1,
-                1,2,0,-2,
-                4,0,6,-3,
-                5,0,2, 0};
+void test_determinant(double* mat_a, long side_len) {
 
-
-  printf("\nA, expected det = 6:\n");
-  print_matrix(A, row_A, col_A);
-  printf("%f\n", determinant_matrix(A, row_A));
-  printf("\nB, expected det = 20:\n");
-  print_matrix(B, row_B, col_B);
-  printf("%f\n", determinant_matrix(B, row_B));
-  printf("\nC, expected det = 20:\n");
-  print_matrix(C, row_C, col_C);
-  printf("%f\n", determinant_matrix(C, row_C));
-  printf("\n");
+  determinant_matrix(mat_a, side_len);
 
 }
 
 
-void test_determinant_recur() {
-  int col_A = 2, row_A = 2; // 6
-  double A[] = {6,-3,
-                2, 0};
-                
-  int col_B = 3, row_B = 3; // 20
-  double B[] = {3,2,-1,
-                1,0,-2,
-                4,6,-3};
-                
-  int col_C = 4, row_C = 4; // 20
-  double C[] = {3,0,2,-1,
-                1,2,0,-2,
-                4,0,6,-3,
-                5,0,2, 0};
-
-
-  printf("\nA, expected det = 6:\n");
-  print_matrix(A, row_A, col_A);
-  printf("%f\n", determinant_matrix_recur(A, row_A));
-  printf("\nB, expected det = 20:\n");
-  print_matrix(B, row_B, col_B);
-  printf("%f\n", determinant_matrix_recur(B, row_B));
-  printf("\nC, expected det = 20:\n");
-  print_matrix(C, row_C, col_C);
-  printf("%f\n", determinant_matrix_recur(C, row_C));
-  printf("\n");
-
-}
-
-void test_cofactor() {
+void test_cofactor(double* mat_a, double* mat_b, double* mat_c, long side_len) {
 
   int col_A = 4, row_A = 4;
   double A[] = {3,0,2,-1,
@@ -243,7 +209,7 @@ void test_cofactor() {
 }
 
 
-void test_inverse() {
+void test_inverse(double* mat_a, double* mat_b, double* mat_c, long side_len) {
 
   int col_A = 4, row_A = 4;
   double A[] = {458.1233,0,-1,0,
@@ -274,7 +240,7 @@ void test_inverse() {
 }
 
 
-void test_compute_LUP() {
+void test_compute_LUP(double* mat_a, double* mat_b, double* mat_c, long side_len) {
 
   int col_A = 4, row_A = 4, tot=16;
   double A[] = {11,9,24,2,
@@ -329,7 +295,7 @@ void test_compute_LUP() {
 }
 
 
-void test_compute_LUP_inline() {
+void test_compute_LUP_inline(double* mat_a, double* mat_b, double* mat_c, long side_len) {
 
   int col_A = 4, row_A = 4, tot=16;
   double A[] = {11,9,24,2,
@@ -381,4 +347,31 @@ void test_compute_LUP_inline() {
   printf("Num pivots used: %d\n", num_pivots);
   printf("\n");
 
+}
+
+void allocate_mats(double** mat_a, double** mat_b, double** mat_c, long side_len) {
+
+  long tot_mem = side_len * side_len * sizeof(double);
+
+  *mat_a = (double*)malloc(tot_mem);
+  *mat_b = (double*)malloc(tot_mem);
+  *mat_c = (double*)malloc(tot_mem);
+
+}
+
+void init_mats(double* mat_a, double* mat_b, double* mat_c, long side_len) {
+
+  int tot_elm = side_len*side_len;
+  long i = 0;
+
+  for (i = 0; i < tot_elm; i++) {
+    mat_a[i] = mat_b[i] = mat_c[i] = 123.456; // TODO make this random?
+  }
+
+}
+
+void free_mats(double* mat_a, double* mat_b, double* mat_c){
+  free(mat_a);
+  free(mat_b);
+  free(mat_c);
 }
