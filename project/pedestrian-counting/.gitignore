@@ -1,0 +1,20 @@
+# executables and binaries
+*.exe
+*.out
+*.o
+
+# movies and pics
+*.avi
+*.zip
+*.jpg
+*.png
+*.mp4
+*.h264
+*.mp4
+
+# other
+*.dat
+
+# git script
+git_acp.bash
+

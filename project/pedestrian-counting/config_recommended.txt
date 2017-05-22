@@ -1,0 +1,33 @@
+# settings for ped counter
+# order and format:
+# one line per item, for comments start line with '#'
+# do not use blank lines
+#
+# video name or (soon) CAMERA
+# background file name or NONE
+# MAX_DIST_SQD
+# SENSITIVITY_VALUE_1 only 3 colors to filter black (0), gray (128ish), or white(255)
+# SENSITIVITY_VALUE_2 more filtering options
+# BLUR_SIZE_1
+# BLUR_SIZE_2
+# MIN_OBJ_AREA
+# background subtraction algorithm (M for MOG2)
+# Tracking algorithm (D for dist, O for overlap)
+#
+../test_videos/three_bikes_one_truck.mp4
+NONE
+#MDS
+#6000000
+400
+# Sensitivity
+200
+30
+# Blur Size
+5
+20
+# MOA
+70
+# BS algo
+M
+# tracking
+D
