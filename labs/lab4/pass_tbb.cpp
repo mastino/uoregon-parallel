@@ -6,9 +6,6 @@
 
 #include <openssl/md5.h>
 
-
-#include <stdio.h>
-#include <stdlib.h>
 #include <tbb/tbb.h>
 #include <pthread.h>
 

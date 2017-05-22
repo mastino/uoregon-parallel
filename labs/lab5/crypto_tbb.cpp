@@ -8,6 +8,12 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include <tbb/tbb.h>
+#include <pthread.h>
+
+using namespace tbb;
+using namespace std;
+
 // utility function: given a list of keys, a list of files to pull them from, 
 // and the number of keys -> pull the keys out of the files, allocating memory 
 // as needed
@@ -39,19 +45,25 @@ void encode(
 	int numKeys
 ) {
 
-  int keyLoop=0;
-  int charLoop=0;
   
-  for(charLoop=0; charLoop<ptextlen; charLoop++) {
+  task_scheduler_init (10);
+  parallel_for( blocked_range<int>(0, ptextlen),
+    [&]( const blocked_range<int> &r ) { 
 
-    char cipherChar=plainText[charLoop]; 
-    for(keyLoop=0; keyLoop<numKeys; keyLoop++) {
-       cipherChar = (*functionPtr) (cipherChar, getBit( &(keyList[keyLoop]), charLoop));
-    }
+        for(int charLoop = r.begin(), el_end = r.end(); charLoop <= el_end; charLoop++){ 
 
-    cypherText[charLoop]=cipherChar;
+          int keyLoop=0;
+          char cipherChar=plainText[charLoop]; 
+          for(keyLoop = 0; keyLoop < numKeys; keyLoop++) {
+             cipherChar = (*functionPtr) (cipherChar, getBit( &(keyList[keyLoop]), charLoop));
+          }
 
-  }
+          cypherText[charLoop]=cipherChar;
+        } 
+
+    });
+
+
 }
 
 void decode(char (*functionPtr)(char,char),
@@ -103,7 +115,7 @@ int main(int argc, char* argv[]) {
   }
  
   if (err == 0) 
-  	printf ("%s", cypherText);
+    fwrite (cypherText, sizeof(char), textLength, stdout);
   
   return err;
 

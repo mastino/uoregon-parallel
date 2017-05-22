@@ -7,6 +7,7 @@ crypto_omp: crypto_omp.c
 	$(CC) -o crypto_omp crypto_omp.c key.c -fopenmp
 
 crypto_tbb:
+	icpc -std=c++11 -fPIC -I$(TBBROOT)/include -o crypto_tbb crypto_tbb.cpp key.c -L$(TBBLIB) -ltbb -lcrypto
 
 crypto_cilk: crypto_cilk.c
 	$(CC) -o crypto_cilk crypto_cilk.c key.c -lcilkrts -lcrypto
@@ -23,6 +24,8 @@ check_omp: crypto_omp
 	./crypto_omp cipher_omp.encode   $(KEYS) 
 
 check_tbb: crypto_tbb
+	./crypto_tbb 19033.txt $(KEYS) > cipher_tbb.encode &&\
+	./crypto_tbb cipher_tbb.encode   $(KEYS)
 
 check_cilk: crypto_cilk
 	./crypto_cilk 19033.txt $(KEYS) > cipher_cilk.encode &&\
