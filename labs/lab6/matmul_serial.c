@@ -120,10 +120,10 @@ int main(int argc, char **argv) {
 	
 	// Check results
 	if (! correct) {
-		fprintf(stderr,"\n Errors in multiplication");
+		fprintf(stderr,"\n Errors in multiplication\n");
 		err = 1;
 	} else {
-        fprintf(stdout,"\n SUCCESS : results match");
+        fprintf(stdout,"\n SUCCESS : results match\n");
     }
     fflush(stdout);
     fflush(stderr);
