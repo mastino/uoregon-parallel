@@ -13,7 +13,9 @@
 #include <stdio.h>
 #include <omp.h>
 
+#ifndef ORDER
 #define ORDER 1000   // the order of the matrix
+#endif
 #define AVAL  3.0    // initial value of A
 #define BVAL  5.0    // initial value of B
 #define TOL   0.001  // tolerance used to check the result
@@ -72,6 +74,7 @@ double matrix_multiply(void) {
 	#pragma omp parallel for private(i,j,k)
 	for (i=0; i<N; i++){
 		for (j=0; j<M; j++){
+			#pragma ivdep
 			for (k=0; k<P; k++){
 				C[i][j] += A[i][k] * B_T[j][k];
 			}
@@ -130,6 +133,8 @@ int main(int argc, char **argv) {
 	if (! correct) {
 		fprintf(stderr,"\n Errors in multiplication");
 		err = 1;
-	}
+	} else {
+    fprintf(stdout,"\n SUCCESS : results match\n");
+  }
 	return err;
 }
