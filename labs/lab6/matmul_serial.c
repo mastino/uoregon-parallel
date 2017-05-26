@@ -13,7 +13,9 @@
 #include <stdio.h>
 #include <omp.h>
 
+#ifndef ORDER
 #define ORDER 1000   // the order of the matrix
+#endif
 #define AVAL  3.0    // initial value of A
 #define BVAL  5.0    // initial value of B
 #define TOL   0.001  // tolerance used to check the result
@@ -120,8 +122,13 @@ int main(int argc, char **argv) {
 	
 	// Check results
 	if (! correct) {
-		fprintf(stderr,"\n Errors in multiplication");
+		fprintf(stderr,"\n Errors in multiplication\n");
 		err = 1;
-	}
+	} else {
+        fprintf(stdout,"\n SUCCESS : results match\n");
+    }
+    fflush(stdout);
+    fflush(stderr);
+
 	return err;
 }
