@@ -8,7 +8,8 @@ all: matmul_serial matmul_omp matmul_cilk matmul_tbb
 matmul_serial: matmul_serial.c
 	icc -o matmul_serial matmul_serial.c -fopenmp
 
-matmul_omp:
+matmul_omp: matmul_omp.c
+	icc -o matmul_omp matmul_omp.c -fopenmp
 
 matmul_cilk:
 

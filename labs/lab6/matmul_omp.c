@@ -58,8 +58,8 @@ double matrix_multiply(void) {
 	double start, end;
 	double B_T[M][P];
 
-	for (i=0; i<M; i++){
-		for (j=0; j<P; j++){
+	for (i=0; i<P; i++){
+		for (j=0; j<M; j++){
 			B_T[j][i] = B[i][j];
 		}
 	}
@@ -69,6 +69,7 @@ double matrix_multiply(void) {
 	// the timer value is captured.
 	start = omp_get_wtime(); 
 
+	#pragma omp parallel for private(i,j,k)
 	for (i=0; i<N; i++){
 		for (j=0; j<M; j++){
 			for (k=0; k<P; k++){
