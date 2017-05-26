@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 
+
 #define TYPE double // in retrospect this will probably always be double
 
 void print_matrix(TYPE* mat_a, int rows_a, int cols_a);
