@@ -74,9 +74,9 @@ double matrix_multiply(void) {
 	#pragma omp parallel for private(i,j,k)
 	for (i=0; i<N; i++){
 		for (j=0; j<M; j++){
-			#pragma ivdep
 			for (k=0; k<P; k++){
 				C[i][j] += A[i][k] * B_T[j][k];
+				// C[i][j] += A[i][k] * B[k][j];
 			}
 		}
 	}
