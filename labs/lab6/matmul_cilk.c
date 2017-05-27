@@ -12,8 +12,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <omp.h>
+ 
+#include <cilk/cilk.h>
+#include <pthread.h>
+#include <unistd.h>
 
+#ifndef ORDER
 #define ORDER 1000   // the order of the matrix
+#endif
 #define AVAL  3.0    // initial value of A
 #define BVAL  5.0    // initial value of B
 #define TOL   0.001  // tolerance used to check the result
@@ -54,7 +60,7 @@ void matrix_init(void) {
 
 // The actual mulitplication function, totally naive
 double matrix_multiply(void) {
-	int i, j, k;
+	int i;
 	double start, end;
 
 	// timer for the start of the computation
@@ -62,9 +68,9 @@ double matrix_multiply(void) {
 	// the timer value is captured.
 	start = omp_get_wtime(); 
 
-	for (i=0; i<N; i++){
-		for (j=0; j<M; j++){
-			for(k=0; k<P; k++){
+	cilk_for (i=0; i<N; i++){
+		for (int j=0; j<M; j++){
+			for(int k=0; k<P; k++){
 				C[i][j] += A[i][k] * B[k][j];
 			}
 		}
@@ -122,6 +128,8 @@ int main(int argc, char **argv) {
 	if (! correct) {
 		fprintf(stderr,"\n Errors in multiplication");
 		err = 1;
-	}
+	} else {
+    fprintf(stdout,"\n SUCCESS : results match\n");
+  }
 	return err;
 }

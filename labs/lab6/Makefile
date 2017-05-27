@@ -11,7 +11,8 @@ matmul_serial: matmul_serial.c
 matmul_omp: matmul_omp.c
 	icc -o matmul_omp matmul_omp.c -fopenmp
 
-matmul_cilk:
+matmul_cilk: matmul_cilk.c
+	icc -std=c99 -o matmul_cilk matmul_cilk.c -lcilkrts -fopenmp
 
 matmul_tbb:
 
