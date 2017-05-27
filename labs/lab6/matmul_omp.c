@@ -14,7 +14,7 @@
 #include <omp.h>
 
 #ifndef ORDER
-#define ORDER 10000   // the order of the matrix
+#define ORDER 1000   // the order of the matrix
 #endif
 #define AVAL  3.0    // initial value of A
 #define BVAL  5.0    // initial value of B
