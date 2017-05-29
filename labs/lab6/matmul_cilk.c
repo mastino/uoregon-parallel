@@ -78,7 +78,6 @@ double matrix_multiply(void) {
 
 	cilk_for (i=0; i<N; i++){
 		for (int j=0; j<M; j++){
-			#pragma simd
 			for(int k=0; k<P; k++){
 				C[i][j] += A[i][k] * B_T[j][k];
 				// C[i][j] += A[i][k] * B[k][j];
