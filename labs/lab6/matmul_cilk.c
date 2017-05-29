@@ -62,6 +62,14 @@ void matrix_init(void) {
 double matrix_multiply(void) {
 	int i;
 	double start, end;
+	double B_T[M][P];
+
+	for (i = 0; i < P; i++){
+		for (int jj = 0; jj < M; jj++){
+			B_T[jj][i] = B[i][jj];
+		}
+	}
+
 
 	// timer for the start of the computation
 	// Reorganize the data but do not start multiplying elements before 
@@ -70,8 +78,10 @@ double matrix_multiply(void) {
 
 	cilk_for (i=0; i<N; i++){
 		for (int j=0; j<M; j++){
+			#pragma simd
 			for(int k=0; k<P; k++){
-				C[i][j] += A[i][k] * B[k][j];
+				C[i][j] += A[i][k] * B_T[j][k];
+				// C[i][j] += A[i][k] * B[k][j];
 			}
 		}
 	}
