@@ -65,8 +65,8 @@ void gaussian_kernel(const int rows, const int cols, const double stddev, double
 	const double g_denom_recip = (1.0/g_denom);
 	double sum = 0.0;
 	for(int i = 0; i < rows; ++i) {
+    const double row_dist = i - (rows/2);
 		for(int j = 0; j < cols; ++j) {
-			const double row_dist = i - (rows/2);
 			const double col_dist = j - (cols/2);
 			const double dist_sq = (row_dist * row_dist) + (col_dist * col_dist);
 			const double value = g_denom_recip * exp((-dist_sq)/denom);
@@ -77,6 +77,7 @@ void gaussian_kernel(const int rows, const int cols, const double stddev, double
 	// Normalize
 	const double recip_sum = 1.0 / sum;
 	for(int i = 0; i < rows; ++i) {
+    #pragma ivdep
 		for(int j = 0; j < cols; ++j) {
 			kernel[i + (j*rows)] *= recip_sum;
 		}		
@@ -93,15 +94,16 @@ void apply_stencil(const int radius, const double stddev,
       const int out_offset = i + (j*rows);
       // For each pixel, do the stencil
       for(int x = i - radius, kx = 0; x <= i + radius; ++x, ++kx) {
-	for(int y = j - radius, ky = 0; y <= j + radius; ++y, ++ky) {
-	  if(x >= 0 && x < rows && y >= 0 && y < cols) {
-	    const int in_offset = x + (y*rows);
-	    const int k_offset = kx + (ky*dim);
-	    out[out_offset].red   += kernel[k_offset] * in[in_offset].red;
-	    out[out_offset].green += kernel[k_offset] * in[in_offset].green;
-	    out[out_offset].blue  += kernel[k_offset] * in[in_offset].blue;
-	  }
-	}
+        #pragma ivdep
+      	for(int y = j - radius, ky = 0; y <= j + radius; ++y, ++ky) {
+      	  if(x >= 0 && x < rows && y >= 0 && y < cols) {
+      	    const int in_offset = x + (y*rows);
+      	    const int k_offset = kx + (ky*dim);
+      	    out[out_offset].red   += kernel[k_offset] * in[in_offset].red;
+      	    out[out_offset].green += kernel[k_offset] * in[in_offset].green;
+      	    out[out_offset].blue  += kernel[k_offset] * in[in_offset].blue;
+      	  }
+      	}
       }
     }
   }
