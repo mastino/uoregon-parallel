@@ -92,7 +92,6 @@ void transpose_matrix(TYPE* mat_a, int rows_a, int cols_a, TYPE* mat_c);
 //output L is lower, U is upper, P is the P matrix which i don't understand
 //returns number of row swaps or -1 if failure
 int compute_LUP(TYPE* mat_a, TYPE* L, TYPE* U, TYPE* P, int n);
-int compute_LUP_inline(TYPE* mat_a, TYPE* L, TYPE* U, TYPE* P, int n);
 
 //set a matrix to zero
 //pre matrix_a has been allocated to rows_a x cols_a
