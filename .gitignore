@@ -14,6 +14,14 @@
 *crypto_omp
 *crypto_tbb
 *crypto_cilk
+*matmul_serial
+*matmul_omp
+*matmul_cilk
+*matmul_tbb
+*stencil_serial
+*stencil_omp
+*stencil_cilk
+*prewitt
 
 */profile.*
 *MULT*
@@ -22,6 +30,7 @@
 
 *.encode
 *.html
-
+*.txt
+*out.jpg
 
 
