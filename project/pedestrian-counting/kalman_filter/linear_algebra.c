@@ -263,18 +263,13 @@ void multiply_matrix(TYPE* mat_a, int rows_a, int cols_a,
                      TYPE* mat_b, int cols_b, 
                      TYPE* mat_c) {
 
-  int i, j, k;
-  int c_ind, a_row, c_row;
-
-  for (i = 0; i < rows_a; i++) {
-    a_row = cols_a * i;
-    c_row = cols_b * i;
-    for (j = 0; j < cols_b; j++) {
-      c_ind = j + c_row;
-      mat_c[c_ind] = 0;
-      for (k = 0; k < cols_a; k++) {
-        mat_c[c_ind] += mat_a[a_row + k] * mat_b[cols_b * k + j];
+  for (int i = 0; i < rows_a; i++) {
+    for (int j = 0; j < cols_b; j++) {
+      double sum = 0;
+      for (int k = 0; k <= cols_a-1; k+=1) {
+        sum += mat_a[cols_a * i + (k)] * mat_b[cols_b * (k) + j];
       }
+      mat_c[j + cols_b * i] = sum;
     } 
   }
 

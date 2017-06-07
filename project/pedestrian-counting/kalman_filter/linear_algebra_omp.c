@@ -126,7 +126,6 @@ TYPE determinant_matrix(TYPE* mat_a, int n) {
 
   det = (num_pivots%2) == 1 ? -1.0 : 1.0;
 
-  #pragma omp parallel for private(i) reduction(*:det)
   for (i = 0; i < n; i++) {
     det *= U[i*n+i];
   }
@@ -144,22 +143,22 @@ TYPE determinant_matrix(TYPE* mat_a, int n) {
 //TODO clean up
 void cofactor_matrix(TYPE* mat_a, int n, TYPE* mat_c) {
   TYPE det = 0;
-  int i, j, r, c, k, row, rr;
   int n_b = n-1;
   int size_b = (n-1) * (n-1);
   int size_a = n * n;
   int sign = 1;
   TYPE mat_b[size_b];
 
-  for (i = 0; i < n; i++) {
-    row = n * i;
-    for (j = 0; j < n; j++) {
+  #pragma omp parallel for
+  for (int i = 0; i < n; i++) {
+    int row = n * i;
+    for (int j = 0; j < n; j++) {
 
-        k = 0;
-        for (r = 0; r < n; r++) {
+        int k = 0;
+        for (int r = 0; r < n; r++) {
           if(r != i){
-            rr = n * r;
-            for (c = 0; c < n; c++) {
+            int rr = n * r;
+            for (int c = 0; c < n; c++) {
               if(c != j) mat_b[k++] = mat_a[rr + c];
             }
           }
@@ -180,61 +179,12 @@ void cofactor_matrix(TYPE* mat_a, int n, TYPE* mat_c) {
 //post mat_c has the result of multipling mat_a and mat_b
 void add_matrix(TYPE* mat_a, int rows, int cols, TYPE* mat_b, TYPE* mat_c) {
 
+  int n = rows*cols;
 
-  /*@ begin PerfTuning (
-   def build {
-     arg build_command = 'gcc';
-     #arg libs = '-lrt';  # Only needed on linux
-   } 
-   def performance_counter {
-     arg repetitions = 5;
-   }
-   def performance_params {  
-     param UF[] = range(1,11);
-     param CFLAGS[] = ['-O0', '-O1', '-O2', '-O3'];
-     #constraint divisible_by_two = (UF % 2 == 0);
-   }
-   def input_params {
-     param rows[] = [100];
-     param cols[] = [100];
-     let TOT = rows * cols
-   }
-   def input_vars {
-     decl dynamic double mat_a[TOT] = random;
-     decl dynamic double mat_b[TOT] = random;
-     decl dynamic double mat_c[TOT] = 0;
-   }
-   def search {
-     arg algorithm = 'Exhaustive';
-   }
-  ) @*/
-
-  int i, j;
-  int ind, row;
-
-
-  /* begin Loop ( 
-    transform Unroll(ufactor=UF) 
-    for (i = 0; i <= rows-1; i++) {
-      row = cols * i;
-      for (j = 0; j <= cols-1; j++) {
-        ind = row + j;
-        mat_c[ind] = mat_a[ind] + mat_b[ind];
-      }
-    }
-  ) */
-
-  for (i = 0; i < rows; i++) {
-    row = cols * i;
-    for (j = 0; j < cols; j++) {
-      ind = row + j;
-      mat_c[ind] = mat_a[ind] + mat_b[ind];
-    }
+  #pragma omp parallel for
+  for (int i = 0; i < n; i++) {
+      mat_c[i] = mat_a[i] + mat_b[i];
   }
-
-  /* end */
-  /*@ end @*/
-
 }
 
 //multiply matrices together
@@ -242,16 +192,14 @@ void add_matrix(TYPE* mat_a, int rows, int cols, TYPE* mat_b, TYPE* mat_c) {
 //     all matrices should be the same dimensions
 //post mat_c has the result of multipling mat_a and scalar
 void multiply_matrix_by_scalar(TYPE* mat_a, int rows, int cols, TYPE scalar, TYPE* mat_c) {
-  int i, j;
-  int ind, row;
 
-  for (i = 0; i < rows; i++) {
-    row = cols * i;
-    for (j = 0; j < cols; j++) {
-      ind = row + j;
-      mat_c[ind] = mat_a[ind] * scalar;
-    }
+  int n = rows*cols;
+
+  #pragma omp parallel for
+  for (int i = 0; i < n; i++) {
+    mat_c[i] = mat_a[i] * scalar;
   }
+
 }
 
 //multiply matrices together
@@ -263,17 +211,12 @@ void multiply_matrix(TYPE* mat_a, int rows_a, int cols_a,
                      TYPE* mat_b, int cols_b, 
                      TYPE* mat_c) {
 
-  int i, j, k;
-  int c_ind, a_row, c_row;
-
-  for (i = 0; i < rows_a; i++) {
-    a_row = cols_a * i;
-    c_row = cols_b * i;
-    for (j = 0; j < cols_b; j++) {
-      c_ind = j + c_row;
-      mat_c[c_ind] = 0;
-      for (k = 0; k < cols_a; k++) {
-        mat_c[c_ind] += mat_a[a_row + k] * mat_b[cols_b * k + j];
+  #pragma omp parallel for
+  for (int i = 0; i < rows_a; i++) {
+    for (int j = 0; j < cols_b; j++) {
+      mat_c[j + cols_b * i] = 0;
+      for (int k = 0; k <= cols_a-1; k+=1) {
+        mat_c[j + cols_b * i] += mat_a[cols_a * i + (k)] * mat_b[cols_b * (k) + j];
       }
     } 
   }
@@ -285,12 +228,11 @@ void multiply_matrix(TYPE* mat_a, int rows_a, int cols_a,
 //     rows in c == cols in a
 //post mat_c has the transpose of mat_a
 void transpose_matrix(TYPE* mat_a, int rows_a, int cols_a, TYPE* mat_c) {
-  int i, j;
-  int a_row;
 
-  for (i = 0; i < rows_a; i++) {
-    a_row = cols_a * i;
-    for (j = 0; j < cols_a; j++) {
+  #pragma omp parallel for
+  for (int i = 0; i < rows_a; i++) {
+    int a_row = cols_a * i;
+    for (int j = 0; j < cols_a; j++) {
       mat_c[rows_a * j + i] = mat_a[a_row + j];
     }
   }
@@ -304,7 +246,7 @@ void transpose_matrix(TYPE* mat_a, int rows_a, int cols_a, TYPE* mat_c) {
 //note this code borrows heavily from here: https://en.wikipedia.org/wiki/LU_decomposition
 //TODO make more memory efficient?
 int compute_LUP(TYPE* mat_a, TYPE* L, TYPE* U, TYPE* P, int n) {
-  int i, j, k, ind_max, curr_row, next_row;
+  int ind_max, curr_row, next_row;
   int cnt_pivots = 0;
   int size_a = n*n;
   TYPE tolerance = 5E-300;
@@ -315,16 +257,30 @@ int compute_LUP(TYPE* mat_a, TYPE* L, TYPE* U, TYPE* P, int n) {
   set_identity(L, n, n);
   copy_mat(mat_a, U, size_a);
 
-  for(i = 0; i < n; i++) {
+  for(int i = 0; i < n; i++) {
     curr_row = i * n;
     max_a = get_abs(U[curr_row + i]);
     ind_max = i;
 
-    for (j = i+1; j < n; j++) {
-      abs_a = get_abs(U[j * n + i]);
-      if (abs_a > max_a) {
-        max_a = abs_a;
-        ind_max = j;
+    #pragma omp parallel
+    {
+      int ind_loc; 
+      TYPE max_loc;
+      #pragma omp for nowait
+      for (int j = i+1; j < n; j++) {
+        abs_a = get_abs(U[j * n + i]);
+        if (abs_a > max_loc) {
+          max_loc = abs_a;
+          ind_loc = j;
+        }
+      }
+
+      #pragma omp critical 
+      {
+        if (max_loc > max_a) {
+            max_a   = max_loc;
+            ind_max = ind_loc;
+        }
       }
     }
 
@@ -343,11 +299,12 @@ int compute_LUP(TYPE* mat_a, TYPE* L, TYPE* U, TYPE* P, int n) {
       copy_mat(temp_row, &U[ind_max], n);
     }
 
-    for(j = i+1; j < n; j++) {
+    #pragma omp parallel for
+    for(int j = i+1; j < n; j++) {
       next_row = j * n;
       coeff = (U[next_row+i]/U[curr_row+i]);
       L[next_row+i] = coeff;
-      for (k = i; k < n; k++) {
+      for(int k = i; k < n; k++) {
         U[next_row + k] -= coeff * U[curr_row + k];
       }
     }
@@ -361,12 +318,11 @@ int compute_LUP(TYPE* mat_a, TYPE* L, TYPE* U, TYPE* P, int n) {
 //pre matrix_a has been allocated to rows_a x cols_a
 //post mat_a is all zeros
 void set_zero(TYPE* mat_a, int rows_a, int cols_a) {
-  int i, j;
-  int a_row;
 
-  for (i = 0; i < rows_a; i++) {
-    a_row = cols_a * i;
-    for (j = 0; j < cols_a; j++) {
+  #pragma omp parallel for
+  for (int i = 0; i < rows_a; i++) {
+    int a_row = cols_a * i;
+    for (int j = 0; j < cols_a; j++) {
       mat_a[a_row + j] = 0;
     }
   }
@@ -376,29 +332,29 @@ void set_zero(TYPE* mat_a, int rows_a, int cols_a) {
 //pre matrix_a has been allocated to rows_a x cols_a
 //post mat_a has ones in the diagonal and zeros elsewhere
 void set_identity(TYPE* mat_a, int rows_a, int cols_a) {
-  int i, j;
-  int a_row;
 
-  for (i = 0; i < rows_a; i++) {
-    a_row = cols_a * i;
-    for (j = 0; j < cols_a; j++) {
+  #pragma omp parallel for
+  for (int i = 0; i < rows_a; i++) {
+    int a_row = cols_a * i;
+    for (int j = 0; j < cols_a; j++) {
       mat_a[a_row + j] = (double)(i == j);
     }
   }
+
 }
 
 //deep copy of a to b
 void copy_mat(TYPE* mat_a, TYPE* mat_c, int total_elms) {
-  int i;
-  for (i = 0; i < total_elms; i++)
+  
+  #pragma omp parallel for
+  for (int i = 0; i < total_elms; i++)
     mat_c[i] = mat_a[i];
+
 }
 
 //returns abs(a)
 //TODO make a macro?
 TYPE get_abs(TYPE a) {
   return (((a < 0) * -2) + 1) * a;
-  
   // return (a < 0) ? -a : a;
-
 }
