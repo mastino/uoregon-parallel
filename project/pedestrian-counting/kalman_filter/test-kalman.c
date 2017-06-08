@@ -121,12 +121,12 @@ void test_projectile() {
 
   TYPE *A, *C, *Q, *R, *P, *K, *x, *y, *x_hat,
        *x_hat_new, *A_T, *C_T, *id,
-       *temp_1, *temp_2, *temp_3, *temp_4;
+       *temp_1, *temp_2, *temp_3, *temp_4, *temp_5;
 
   success = allocate_matrices(&A, &C, &Q, &R, &P, &K, n, m);
   success = success && allocate_vectors(&x, &y, &x_hat, n, m);
   success = success && allocate_temp_matrices(&x_hat_new, &A_T, &C_T, &id,
-                                              &temp_1, &temp_2, &temp_3, &temp_4, n, m);
+                                              &temp_1, &temp_2, &temp_3, &temp_4, &temp_5, n, m);
 
   if( !success ) {
     printf("ERROR allocating matrices\n");
@@ -146,6 +146,9 @@ void test_projectile() {
   copy_mat(R_init, R, m * m);
   copy_mat(P_init, P, n * n);
   copy_mat(x_hat_init, x_hat, n);
+
+  transpose_matrix(A, n, n, A_T);
+  transpose_matrix(C, m, n, C_T);
 
   printf("\nA:\n");
   print_matrix(A, n, n);
@@ -168,7 +171,8 @@ void test_projectile() {
     y[1] = measurements.y[i];
 
     update(y, x_hat, &t, dt, n, m, A,  C,  Q,  R,  P,  K,
-           x_hat_new, A_T, C_T, id, temp_1, temp_2, temp_3, temp_4);
+           x_hat_new, A_T, C_T, id, temp_1, temp_2, temp_3, temp_4, temp_5);
+
     t += dt;
 
     printf("t     = %f\n", t);
@@ -182,7 +186,7 @@ void test_projectile() {
   destroy_matrices(A, C, Q, R, P, K);
   destroy_vectors(x, y, x_hat);
   destroy_temp_matrices(x_hat_new, A_T, C_T, id,
-                        temp_1, temp_2, temp_3, temp_4);
+                        temp_1, temp_2, temp_3, temp_4, temp_5);
 
   free(measurements.x);
   free(measurements.y);
@@ -252,7 +256,7 @@ void test_original() {
 
   TYPE *A, *C, *Q, *R, *P, *K, *x, *y, *x_hat,
        *x_hat_new, *A_T, *C_T, *id,
-       *temp_1, *temp_2, *temp_3, *temp_4;
+       *temp_1, *temp_2, *temp_3, *temp_4, *temp_5;
 
   // List of noisy position measurements (y)
   TYPE measurements[] = {
@@ -275,7 +279,7 @@ void test_original() {
   success = allocate_matrices(&A, &C, &Q, &R, &P, &K, n, m);
   success = success && allocate_vectors(&x, &y, &x_hat, n, m);
   success = success && allocate_temp_matrices(&x_hat_new, &A_T, &C_T, &id,
-                                              &temp_1, &temp_2, &temp_3, &temp_4, n, m);
+                                              &temp_1, &temp_2, &temp_3, &temp_4, &temp_5, n, m);
 
   if( !success ) {
     printf("ERROR allocating matrices\n");
@@ -311,7 +315,7 @@ void test_original() {
     y[0] = measurements[i];
 
     update(y, x_hat, &t, dt, n, m, A,  C,  Q,  R,  P,  K,
-           x_hat_new, A_T, C_T, id, temp_1, temp_2, temp_3, temp_4);
+           x_hat_new, A_T, C_T, id, temp_1, temp_2, temp_3, temp_4, temp_5);
     t += dt;
 
     printf("t     = %f\n", t);
@@ -323,6 +327,6 @@ void test_original() {
   destroy_matrices(A, C, Q, R, P, K);
   destroy_vectors(x, y, x_hat);
   destroy_temp_matrices(x_hat_new, A_T, C_T, id,
-                        temp_1, temp_2, temp_3, temp_4);
+                        temp_1, temp_2, temp_3, temp_4, temp_5);
 
 }

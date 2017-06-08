@@ -33,6 +33,7 @@
 */
 
 #include "kalman_filter.h"
+#include <omp.h>
 
 char allocate_matrices(TYPE** A, TYPE** C, TYPE** Q, TYPE** R, TYPE** P, TYPE** K, int n, int m) {
 
@@ -58,7 +59,8 @@ char allocate_vectors(TYPE** x, TYPE** y, TYPE** x_hat, int n, int m) {
 }
 
 char allocate_temp_matrices(TYPE** x_hat_new, TYPE** A_T, TYPE** C_T, TYPE** id,
-                            TYPE** temp_1, TYPE** temp_2, TYPE** temp_3, TYPE** temp_4, TYPE** temp_5, int n, int m) {
+                            TYPE** temp_1, TYPE** temp_2, TYPE** temp_3, TYPE** temp_4, TYPE** temp_5,
+                            int n, int m) {
   char fail = 0;
   int  size = n > m ? n*n : m*m;
 
@@ -74,7 +76,8 @@ char allocate_temp_matrices(TYPE** x_hat_new, TYPE** A_T, TYPE** C_T, TYPE** id,
   *temp_2     = (TYPE*) malloc(size); // n x n or m x m if bigger
   *temp_3     = (TYPE*) malloc(size); // n x n or m x m if bigger
   *temp_4     = (TYPE*) malloc(size); // n x n or m x m if bigger
-  fail = fail || (temp_1 == 0) || (temp_2 == 0) || (temp_3 == 0) || (temp_4 == 0);
+  *temp_5     = (TYPE*) malloc(size); // n x n or m x m if bigger
+  fail = fail || (temp_1 == 0) || (temp_2 == 0) || (temp_3 == 0) || (temp_4 == 0) || (temp_5 == 0);
 
   return !fail;
 }
@@ -104,6 +107,7 @@ void destroy_temp_matrices(TYPE* x_hat_new, TYPE* A_T, TYPE* C_T, TYPE* id,
   free(temp_2);
   free(temp_3);
   free(temp_4);
+  free(temp_5);
 }
 
 //update the filter
@@ -115,38 +119,63 @@ void update(TYPE* y, TYPE* x_hat,
             TYPE* x_hat_new, TYPE* A_T, TYPE* C_T, TYPE* id,
             TYPE* temp_1, TYPE* temp_2, TYPE* temp_3, TYPE* temp_4, TYPE* temp_5) {
 
-  transpose_matrix(A, n, n, A_T); // do this separately since they never? change
+  #pragma omp parallel sections
+  {
+    #pragma omp section
+    {
+      // 2
+      multiply_matrix(A, n, n, x_hat, 1, x_hat_new);
+    }
+  
+    #pragma omp section
+    {
+      // 3
+      multiply_matrix(A, n, n, P, n, temp_1);
+      multiply_matrix(temp_1, n, n, A_T, n, temp_2);
+      add_matrix(temp_2, n, n, Q, P);
+    }
 
-  //x_hat_new = A * x_hat
-  multiply_matrix(A, n, n, x_hat, 1, x_hat_new);
+  
+    #pragma omp section
+    {
+      multiply_matrix(P, n, n, C_T, m, temp_3);
+    }
+        
+    #pragma omp section
+    {
+      // 6
+      multiply_matrix(C, m, n, P, n, temp_1);
+      multiply_matrix(temp_1, m, n, C_T, m, temp_2);
+      add_matrix(temp_2, m, m, R, temp_1);  
+      invert_matrix(temp_1, m, temp_2); // (C*P*C_T+R)^-1
+    }
+    
+  } // first section set
 
-  //P = A*P*A_T + Q;
-  multiply_matrix(A, n, n, P, n, temp_1);
-  multiply_matrix(temp_1, n, n, A_T, n, temp_2);
-  add_matrix(temp_2, n, n, Q, P);
+  // 7
+  multiply_matrix(temp_3, n, m, temp_2, m, K);
+  
+  #pragma omp parallel sections
+  {
+    #pragma omp section
+    {
+      // 8
+      multiply_matrix(C, m, n, x_hat_new, 1, temp_5);
+      multiply_matrix_by_scalar(temp_5, m, 1, -1, temp_4);
+      add_matrix(y, m, 1, temp_4, temp_5);
+      multiply_matrix(K, n, m, temp_5, 1, temp_4);
+      add_matrix(x_hat_new, n, 1, temp_4, x_hat);
+    }
 
+    #pragma omp section
+    {
+      // 9
+      multiply_matrix(K, n, m, C, n, temp_1);
+      multiply_matrix_by_scalar(temp_1, n, n, -1, temp_2);
+      add_matrix(id, n, n, temp_2, temp_1);
+      multiply_matrix(temp_1, n, n, P, n, temp_2);
+      copy_mat(temp_2, P, n * n);
+    }
+  } // second section set
 
-  transpose_matrix(C, m, n, C_T); // do this separately since they never? change  
-
-  // K = P*C_T*(C*P*C_T+R)^-1
-  multiply_matrix(C, m, n, P, n, temp_1);
-  multiply_matrix(temp_1, m, n, C_T, m, temp_2);
-  add_matrix(temp_2, m, m, R, temp_1);  
-  invert_matrix(temp_1, m, temp_2); // (C*P*C_T+R)^-1
-  multiply_matrix(P, n, n, C_T, m, temp_1); // P*C_T
-  multiply_matrix(temp_1, n, m, temp_2, m, K);
-
-  // x_hat = x_hat_new + K * (y - C*x_hat_new);
-  multiply_matrix(C, m, n, x_hat_new, 1, temp_3);
-  multiply_matrix_by_scalar(temp_3, m, 1, -1, temp_4);
-  add_matrix(y, m, 1, temp_4, temp_3);
-  multiply_matrix(K, n, m, temp_3, 1, temp_4);
-  add_matrix(x_hat_new, n, 1, temp_4, x_hat);
-
-  // P = (I - K*C)*P;
-  multiply_matrix(K, n, m, C, n, temp_1);
-  multiply_matrix_by_scalar(temp_1, n, n, -1, temp_2);
-  add_matrix(id, n, n, temp_2, temp_1);
-  multiply_matrix(temp_1, n, n, P, n, temp_2);
-  copy_mat(temp_2, P, n * n);
 }

@@ -51,14 +51,14 @@
 char allocate_matrices(TYPE** A, TYPE** C, TYPE** Q, TYPE** R, TYPE** P, TYPE** K, int n, int m);
 char allocate_vectors(TYPE** x, TYPE** y, TYPE** x_hat, int n, int m);
 char allocate_temp_matrices(TYPE** x_hat_new, TYPE** A_T, TYPE** C_T, TYPE** id,
-                            TYPE** temp_1, TYPE** temp_2, TYPE** temp_3, TYPE** temp_4, int n, int m);
+                            TYPE** temp_1, TYPE** temp_2, TYPE** temp_3, TYPE** temp_4, TYPE** temp_5, int n, int m);
 
 //liberate the memory for various matrices used in computation
 //useage call of these when you are all done with the filter
 void destroy_matrices(TYPE* A, TYPE* C, TYPE* Q, TYPE* R, TYPE* P, TYPE* K);
 void destroy_vectors(TYPE* x, TYPE* y, TYPE* x_hat);
 void destroy_temp_matrices(TYPE* x_hat_new, TYPE* A_T, TYPE* C_T, TYPE* id,
-                           TYPE* temp_1, TYPE* temp_2, TYPE* temp_3, TYPE* temp_4);
+                           TYPE* temp_1, TYPE* temp_2, TYPE* temp_3, TYPE* temp_4, TYPE* temp_5);
 
 //update the filter
 //param
@@ -67,28 +67,5 @@ void update(TYPE* y, TYPE* x_hat,
             double* t, double dt, int n, int m,
             TYPE* A, TYPE* C, TYPE* Q, TYPE* R, TYPE* P, TYPE* K,
             TYPE* x_hat_new, TYPE* A_T, TYPE* C_T, TYPE* id,
-            TYPE* temp_1, TYPE* temp_2, TYPE* temp_3, TYPE* temp_4);
+            TYPE* temp_1, TYPE* temp_2, TYPE* temp_3, TYPE* temp_4, TYPE* temp_5);
 
-void predict(TYPE* x_hat, 
-            int n, int m,
-            TYPE* A, TYPE* Q, TYPE* P,
-            TYPE* x_hat_new, TYPE* A_T,
-            TYPE* temp_1, TYPE* temp_2);
-
-void correct(TYPE* y, TYPE* x_hat, 
-            int n, int m,
-            TYPE* C, TYPE* R, TYPE* P, TYPE* K,
-            TYPE* x_hat_new, TYPE* C_T, TYPE* id,
-            TYPE* temp_1, TYPE* temp_2, TYPE* temp_3, TYPE* temp_4);
-
-void predict_inline(TYPE* x_hat, 
-            int n, int m,
-            TYPE* A, TYPE* Q, TYPE* P,
-            TYPE* x_hat_new, TYPE* A_T,
-            TYPE* temp_1, TYPE* temp_2);
-
-void correct_inline(TYPE* y, TYPE* x_hat, 
-            int n, int m,
-            TYPE* C, TYPE* R, TYPE* P, TYPE* K,
-            TYPE* x_hat_new, TYPE* C_T, TYPE* id,
-            TYPE* temp_1, TYPE* temp_2, TYPE* temp_3, TYPE* temp_4);
