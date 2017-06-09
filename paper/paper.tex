@@ -1,4 +1,6 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
+\usepackage[pdftex]{graphicx}
+\usepackage{amsmath}
 
 \title{A Survey of Parallelization of Kalman Filters}
 \author{
@@ -14,13 +16,109 @@
 Kalman Filters have been an important aspect of many computer systems since they were first developed in the 1960s. Many of these applications require real-time speeds which has necessitated the parallelization of the Kalman filter from early in its development. This survey explores efforts to accelerate the algorithm with parallel techniques over the last 30 years  and discusses of the domains to which those parallelizations were applied. Many of the techniques are highly specialized to a particular domain so special care is given to how the parallelizations could be applied to different areas or are restricted to a specific application. Additionally, some discussion of future research is provided.
 \end{abstract}
 
-\section{Reference Notes}
-Included below are the references that will be used in the survey. Please note that several (\cite{blackman1986multiple, welch1995introduction, budhiraja2007survey, kalman1960new})  are included as background for Kalman filters while others (i.e. \cite{cerati2015kalman, cerati2016kalman, cerati2015traditional} and \cite{rao1991fully, spanos2005distributed, spanos2005approximate}) are closely related and will be discussed as a single unit in the paper.\\
+\section{Introduction}
+Since their inception in 1960 Kalman filters have been heavily used for the estimation of states in dynamic systems. These filters have numerous applications especially in tracking various objects; they have been used to track object in conjunction with computer vision, radar tracking for airplanes and ships, vehicle and missile guidance systems, orbit calculation for satillites, and particles in HEP. Additionally, they have been used for demographic and economic studies, industrial process control, climate science, and geological surveys. Often these applications, the tracking ones especially, require real-time performance, pushing the performance demands of Kalman filtering.
 
-If you have any questions or comments on the proposed sources or would like copies of the PDFs please let me know.
+At first the filtering was done primarily using customized circuits, each designed for the specific application to match the number of states in use. As modern computers developed, new opportunities for flexibility and improved performance were discovered. In many cases parallelism at different levels features in the performance enhancement of the Kalman filter. This survey reviews some of the implementations and applications of parallel Kalman filters.
+
+
+\section{Background}
+Kalman filters \cite{kalman1960new} were originally presented in 1960 to provide a solution to filtering and prediction problems in dynamic systems. In particular, the results targeted signals involved in communication and control systems. Since then, the Kalman filter has been applied to many dynamic systems in fields including physics, signal processing, economics, and others. In this section, we present some background information to enable the reader to better understand the rest of the survey. Interested readers are directed to the following sources: \cite{blackman1986multiple, welch1995introduction, budhiraja2007survey, kalman1960new}.
+
+The Kalman filter is used to estimate the state of some dynamic system based on measurements, models, and associated errors of that system. This information is combined into a set of matrices that represent the whole system (Table \ref{mats}). The sizes of the matrices are based on the number of states in the system model ($n$) and the number of states measured in each time step ($m$). While some applications have larger state sizes, most require only a small number of states, resulting in matrices that are at the largest 20x20. In addition to the matrices there are also two vectors; $x$ of length $n$ that holds the estimated state and $y$ of length m for the current measurements.
+
+\begin{table}
+\caption{List of matrices involved in the Kalman filter.} 
+\label{mats}
+\centering
+\begin{tabular}{||c c c||} 
+\hline
+Name & Description & dimensions \\ [0.5ex] 
+\hline\hline
+A & system dynamics & $nxn$\\
+\hline
+C or H & measurement matrix & $mxn$\\
+\hline
+Q & process (system) noise & $nxn$\\
+\hline
+R & measurement noise & $mxm$\\
+\hline
+P & error covariance & $nxn$\\
+\hline
+K & Kalman gain & $nxm$\\
+\hline
+\end{tabular}
+\end{table}
+
+At each time step the predicted state and the most recent measurement are compared and these values, combined with the error matrices are used to predict the next state. This prediction is based on weighting the measurement and model (expressed in the Kalman gain) and emphasizing one over the other based on error values. The accuracy of the Kalman filter relies heavily of the accuracy of the error and covariance matrices since these are integral in determining the Kalman gain with each step.
+
+The Kalman equations are shown in Equations 1 - 5. Equations 1 and 2 are the predict portion, estimating the next state based on past data. Equations 3 - 5 and the correct section, updating the estimated state and Kalman gain based on the measurement and predicted state. There are additional versions such as the Extended Kalman Filter that implement improvements such as time variant error functions, or other changes to improve performance or accuracy.
+
+\begin{equation}
+\hat{x}_{new} = A\hat{x}
+\end{equation}
+
+\begin{equation}
+P=APA^T+Q
+\end{equation}
+
+\begin{equation}
+K = PC^T(CPC^T+R)^{-1}
+\end{equation}
+
+\begin{equation}
+\hat{x}=\hat{x}_{new} + K(y-C\hat{x}_{new})
+\end{equation}
+
+\begin{equation}
+P=(I-KC)P
+\end{equation}
+
+\section{Early Work}
+Since the kalman filter has been around for so long, they have been the subject of many research projects seeking to improve the performance and/or accuracy. Two of the early results are discussed in this section. Both works are intended for Multiple Target Tracking of planes, satellites, or other rapidly moving targets.
+
+\subsection{Circuit Parallelization}
+In \cite{Shaffer:1987:IPE:42040.42101}, Shaffer presents a circuit design for an extended Kalman filter. While this work is a hardware implementation rather than software, it still applies the theoretical concepts and parallel patterns that are common in modern parallel software. In particular, Shaffer uses a pipeline pattern to take advantage of the concurrency of the algorithm and streaming nature of the data. Figure \ref{fig:shaffer} shows the data flow diagram of the system.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{shaffer.png}
+\label{fig:shaffer}
+\caption{Dataflow diagram from \cite{Shaffer:1987:IPE:42040.42101}}
+\end{figure}
+
+The pipelining of the circuit which was enabled by the removal of recursion from the implementation, resulted in a 360x increase in throughput for the system. This improvement allowed the authors to over 500 targets while collecting 1188 samples/sec.
+
+\subsection{Early Vector Parallelism}
+Palis and Krecker, \cite{palis1990parallel}, use the SIMD arrays available in the Connection Machine (a supercomputer manufactured in the late 1980s) to parallelize the work of a single filter and the many-cores of the machine to parallelize the operation of numerous independent filters. The authors use the Square Root Kalman filter which is a variation that allows it to be processed using single-precision calculations without information loss.
+
+The first step to parallelism is to use the SIMD operations to improve the speed of the linear algebra operations. These operations take advantage of the independence of row and elements in matrix operations and can improve the speed of a single Kalman filter operating on a single node. The authors show that the time for computation grows linearly with the number of states in the parallel version rather than cubicly as it does in the serial version. 
+
+Second, the authors demonstrate that when tracking multiple targets the Kalman filters (one or more for each target) can be parallelized by running them on independent processors in the Connection Machine cluster. Their results show that this method can track many more targets than a serial machine.
+
+\section{Modern Implementations and Applications}
+
+\subsection{High Energy Physics}
+Cerati et al. have published several similar papers \cite{cerati2015kalman,cerati2016kalman,cerati2015traditional} on parallelizing Kalman filters for use at CERN. The physicists utilize Kalman filters to build tracks of subatomic particles during the runs of the LHC. Given the size and speed at which these events occur, the filtering must occur as rapidly as possible. Similar to Shaffer's work in the 90s, these authors explloit two levels of parallelism on XeonPhi; the vector instructions for the matrix operations and the concurrent bulding of multiple tracks.
+
+\subsection{Climate Science}
+\cite{menard2000assimilation1,menard2000assimilation2,lyster1997parallel}
+
+\subsection{Smart Grid and GPUs}
+\cite{karimipour2015extended}
+
+\subsection{Cell Tower Power Management}
+\cite{rosen2013parallelization}
+
+\section{Sensor Applications}
+\cite{rao1991fully,spanos2005distributed,spanos2005approximate,hashemipour1988decentralized}
+
+\section{FPGA Implementations}
+\cite{bonato2009floating,liu2007efficient}
+
+\section{Conclusion}
+Sorry I didn't finish in time. Stay tuned for updates!
 
 \nocite{*}
-
 \bibliographystyle{plain}
 \bibliography{filtering}
 
