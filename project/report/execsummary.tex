@@ -1,0 +1,5 @@
+\section{Executive Summary}
+The Office of Strategic National Alien Planning (OSNAP) has made a substantial investment in a Secure Alien Surveillance System (SASS). As part of the acquisition, control software is required to track potential targets in surveillance video using Kalman Filters.
+
+This report details a study into how the performance of Kalman filters can be improved through parallel execution. Several versions of kalman filters were produced with different level and techniques for parallelization. The underlying linear algebra was parallelized in two ways: using OpenMP and using the Intel compiler's built in parallelization tools. The Kalman filter built on top of this linear algebra was parallelized using OpenMP and tested with each of the linear algebra designs. The results indicate that Kalman filters would not make a good target for thread level parallelization.
+
