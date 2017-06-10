@@ -110,7 +110,18 @@ The task of parallelizing multiple tracks in this scenario is complicated by the
 
 
 \subsection{Climate Science}
-\cite{menard2000assimilation1,menard2000assimilation2,lyster1997parallel}
+In \cite{menard2000assimilation1,menard2000assimilation2,lyster1997parallel}, Lyster, Menard and their collaborators present a parallel implementation of a Kalman filter intended for use analyzing trace chemicals in the atmosphere based on satellite measurements. This data comes in five dimensions and has more than $10^4$ states in the dynamic system. 
+
+The relatively large matrices provide enough enough computation to justify the use of distributed memory computation. In their papers the authors analyze two possible partitioning techniques. The first is to distribute matrix P across the different processors and the latter is to distribute matrix A. Both methods show significant speedup over the serial version. Distribution of the P matrix has slightly better timing achieving a speedup of 434 when comparing 500 processors to the serial implementation. The speedup for a smaller number of processors is shown in figure \ref{fig:climate} but the authors say it scales to at least 500.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{climate.png}
+\caption{Speedup from \cite{lyster1997parallel}}
+\label{fig:climate}
+\end{figure}
+
+
 
 \subsection{Smart Grid and GPUs}
 Recent developments in smart grid technologies have greatly increased the amount and frequency of data available for power grid management. Kalman filters are an important part of the analysis so Karimipour and Dinavahi present a parallelized system based on the kalman filter in \cite{karimipour2015extended}. For this system the authors utilize a machine with a quad-core processor and GPU. To fully utilize available resources they find three types of parallelism seen in figure \ref{fig:mpdse}: Task parallelism between the different equations, data parallelism from the linear algebra, and Linear solver parallelism (for lack of a better phrase) for the parts that aren't in the Kalman filer.
@@ -133,7 +144,23 @@ The authors consider the possibility of separating the equations and running eac
 THe authors enable this parallelization by modifying the problem slightly. The full MIMO (multiple input multiple output) problem is broken down into numerous MISO (multiple input single output) problems which limits the number of measurements (possibly to one, the paper wasn't clear) thus eliminating the need to invert a large matrix.
 
 \section{Sensor Applications}
-\cite{rao1991fully,spanos2005distributed,spanos2005approximate,hashemipour1988decentralized}
+A related but somewhat different application of paralleism in Kalman filters occurs in distributed sensor networks. In these systems each sensor takes some of the measurements but the filter must be computed over all the measurements.  To manage this situation, researchers take different approaches to distributing data and computation. Most use some form of a local computation followed by global, but the details differ between the implementation.
+
+The distributed sensor networks in question fall into two categories with impacts on how the filter is implemented \cite{rao1991fully}. They can have a central node, usually with extra resources available, and a star network where each node connects directly to the central machine. Alternatively the network can be fully distributed, where no central node exists for coordination and the sensors must manage themselves.
+
+\subsection{Central Node}
+In the case where the network includes a centralized node, a simple solution would be to have each sensor send its measurement back to the central which could then compute the result as a standard Kalman filter. Distributing all or part of the computation to the nodes can produce improvements in time and resiliency of the computations. 
+
+In \cite{hashemipour1988decentralized}, the authors develop an algorithm for calculating a Kalman filter over such a network. They do this by developing intermediate equations to be executed locally on each node and then compiled into one result at the centralized node. This method allow the system to take advantage of concurrency to improve speed and distribution to be resilient against failure of some nodes. 
+
+Additionally Hashemipour et al consider different sensor configurations . First, they consider collocated sensors where the timing of measurements can be coordinated. In this case the parallelism comes from the fact that measurements impact different parts of the computation so each sensor can have concurrent work. Second they consider the situation where the sensors are widely distributed so measurements are not taken at the same time. In this case, the parallelism exploited comes from the time-sequential feature of the data similar to a pipeline pattern. Lastly the authors demonstrate how to combine the two methods in the situation where several groups of collocated sensor are distributed across a wide area.
+
+\subsection{Fully Distributed}
+In \cite{rao1991fully} Rao presents an algorithm for a Kalmn filter across a fully distributed group of sensor nodes. In this case there is no centralized node to perform the final computation that brings the local filter results together. To make up for the lack of a central node, the authors simply broadcast the intermediate results to all the node and then every node computes the final result.
+
+
+\subsection{Other sensor stuff}
+\cite{spanos2005distributed,spanos2005approximate}
 
 \section{FPGA Implementations}
 While many excellent software applications exist there are also good reasons to implement the Kalman filter using hardware. Two examples,  \cite{bonato2009floating,liu2007efficient}, use FPGA implementations of Kalman filtering to dramatically reduce the time required and the energy used. These implementations employ some level of parallelism but gain further performance benefits by avoiding limitations inherent to software.
@@ -144,6 +171,8 @@ Liu et al. \cite{liu2007efficient} apply a similar technique to the Approximate 
 
 \section{Conclusion}
 Sorry I didn't finish in time. Stay tuned for updates!
+
+In conclusion, the numerous applications of Kalman filters present varied opportunities for parallelization, but differences in the applications make it challenging to generalize a solution to multiple applications. As a result, there are a variety of creative methods used in parallel Kalman filters. These range from vectorization of the linear algebra to distributing the filter among sensor networks.
 
 \nocite{*}
 \bibliographystyle{plain}
