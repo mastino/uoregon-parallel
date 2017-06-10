@@ -21,6 +21,8 @@ Since their inception in 1960 Kalman filters have been heavily used for the esti
 
 At first the filtering was done primarily using customized circuits, each designed for the specific application to match the number of states in use. As modern computers developed, new opportunities for flexibility and improved performance were discovered. In many cases parallelism at different levels features in the performance enhancement of the Kalman filter. This survey reviews some of the implementations and applications of parallel Kalman filters.
 
+The rest of the paper is not organized but is as follows: Section 2 covers background on the Kalman filter; Section 3 discusses some early implementations of parallel Kalman filters; Section 4 presents more recent implementations and applications; Section 5 talks about Kalman filters parallelized over distributed sensor networks; Section 6 is about FPGA implementations; and Section 7 concludes. I sincerely apologize for the case study of bad writing that this paper is.
+
 
 \section{Background}
 Kalman filters \cite{kalman1960new} were originally presented in 1960 to provide a solution to filtering and prediction problems in dynamic systems. In particular, the results targeted signals involved in communication and control systems. Since then, the Kalman filter has been applied to many dynamic systems in fields including physics, signal processing, economics, and others. In this section, we present some background information to enable the reader to better understand the rest of the survey. Interested readers are directed to the following sources: \cite{blackman1986multiple, welch1995introduction, budhiraja2007survey, kalman1960new}.
@@ -82,8 +84,8 @@ In \cite{Shaffer:1987:IPE:42040.42101}, Shaffer presents a circuit design for an
 
 \begin{figure}
 \includegraphics[width=\textwidth]{shaffer.png}
-\label{fig:shaffer}
 \caption{Dataflow diagram from \cite{Shaffer:1987:IPE:42040.42101}}
+\label{fig:shaffer}
 \end{figure}
 
 The pipelining of the circuit which was enabled by the removal of recursion from the implementation, resulted in a 360x increase in throughput for the system. This improvement allowed the authors to over 500 targets while collecting 1188 samples/sec.
@@ -100,11 +102,26 @@ Second, the authors demonstrate that when tracking multiple targets the Kalman f
 \subsection{High Energy Physics}
 Cerati et al. have published several similar papers \cite{cerati2015kalman,cerati2016kalman,cerati2015traditional} on parallelizing Kalman filters for use at CERN. The physicists utilize Kalman filters to build tracks of subatomic particles during the runs of the LHC. Given the size and speed at which these events occur, the filtering must occur as rapidly as possible. Similar to Shaffer's work in the 90s, these authors explloit two levels of parallelism on XeonPhi; the vector instructions for the matrix operations and the concurrent bulding of multiple tracks.
 
+For parallelization of linear algebra the authors develop their own library that is optimized for small matrix computation of various architectures. They demonstrate that the use of vector instructions or MICs can produce significant speedup in the application.
+
+The task of parallelizing multiple tracks in this scenario is complicated by the fact that the implementation explores all possible tracks in the case the multiple potential matches are found. This results in a pattern more akin to fork join than map. This problem results in challenges for load balancing since it is unknown which tracks will need to branch. The authors handle this challenge by partitioning in terms of physical region so that threads would track all objects within one part of the beam.
+
+
 \subsection{Climate Science}
 \cite{menard2000assimilation1,menard2000assimilation2,lyster1997parallel}
 
 \subsection{Smart Grid and GPUs}
-\cite{karimipour2015extended}
+Recent developments in smart grid technologies have greatly increased the amount and frequency of data available for power grid management. Kalman filters are an important part of the analysis so Karimipour and Dinavahi present a parallelized system based on the kalman filter in \cite{karimipour2015extended}. For this system the authors utilize a machine with a quad-core processor and GPU. To fully utilize available resources they find three types of parallelism seen in figure \ref{fig:mpdse}: Task parallelism between the different equations, data parallelism from the linear algebra, and Linear solver parallelism (for lack of a better phrase) for the parts that aren't in the Kalman filer.
+
+The authors handle the different types of parallelism much like the others did. Linear algebra is sent to GPUs the exploit the SIMD nature of it, while other computations are kept on the CPU. The power grid operations have an interesting twist since they are running additional linear algebra equations at the same time. Additionally, the power grid systems produce between 171 and 23,151 measurements per time step, so the matrices involved are much larger than those in tracking applications allowing the application to take advantage of the wide vectors available in a GPU.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{mpdse.png}
+\caption{System flowchart from \cite{karimipour2015extended}}
+\label{fig:mpdse}
+\end{figure}
 
 \subsection{Cell Tower Power Management}
 \cite{rosen2013parallelization}
@@ -113,7 +130,11 @@ Cerati et al. have published several similar papers \cite{cerati2015kalman,cerat
 \cite{rao1991fully,spanos2005distributed,spanos2005approximate,hashemipour1988decentralized}
 
 \section{FPGA Implementations}
-\cite{bonato2009floating,liu2007efficient}
+While many excellent software applications exist there are also good reasons to implement the Kalman filter using hardware. Two examples,  \cite{bonato2009floating,liu2007efficient}, use FPGA implementations of Kalman filtering to dramatically reduce the time required and the energy used. These implementations employ some level of parallelism but gain further performance benefits by avoiding limitations inherent to software.
+
+Bonato et al. \cite{bonato2009floating}, implement the Extended Kalman filter with the purpose of improving navigation systems for mobile robots.The authors achieve speedup by pipelining the algorithm and ensuring that the most used data (matrix $P$) is the most accessible in the FPGA. Their system has a 3x speedup over a penium processor and consumes 1.3\% of the power. 
+
+Liu et al. \cite{liu2007efficient} apply a similar technique to the Approximate Kalman filter used for feature tracking in computer vision. In this application thousands of features (each with a separate filter) must be tracked at once. The FPGA implementation incorporates enough parallel matrix operation elements that it can perform all or most of the operations simultaneously. Additionally, rather than inverting each matrix the approximate Kalman filter estimates the inversion further minimizing the time.
 
 \section{Conclusion}
 Sorry I didn't finish in time. Stay tuned for updates!
