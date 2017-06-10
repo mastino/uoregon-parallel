@@ -21,6 +21,8 @@ Since their inception in 1960 Kalman filters have been heavily used for the esti
 
 At first the filtering was done primarily using customized circuits, each designed for the specific application to match the number of states in use. As modern computers developed, new opportunities for flexibility and improved performance were discovered. In many cases parallelism at different levels features in the performance enhancement of the Kalman filter. Commonly the underlying linear algebra calculations are parallelized in one fashion while the broader equations or simultaneous filters are parallelized a different way; however, some of the applications take different approaches as discussed below. In many cases the application area significantly impacts how the filter is parallelized since the number of states varies dramatically between. For this reason we include a discussion of the intended applications alongside the implementations.
 
+In general there are three motivations for parallelizing an Implementation of the Kalman filter. First is for the sake of real-time performance. In many cases, particularly those for tracking, the results must be obtained in real time or else the plane, boat, or subatomic particle will be lost. Second, the number of states involved in the computation is so large that a serial implementation results in unacceptable runtime, as is the case in the climate applications. Lastly the parallelization may be inherent to the system analyzing the data such as sensor networks. In each situation the application has significant impact on the types of parallelism and computational resources available to the programmer. These differences inspire a wide variety of implementations. 
+
 The rest of the paper is not organized but is as follows: Section 2 covers background on the Kalman filter; Section 3 discusses some early implementations of parallel Kalman filters; Section 4 presents more recent implementations and applications; Section 5 talks about Kalman filters parallelized over distributed sensor networks; Section 6 is about FPGA implementations; and Section 7 concludes. I sincerely apologize for the case study of bad writing that this paper is.
 
 
@@ -116,7 +118,7 @@ The relatively large matrices provide enough enough computation to justify the u
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{climate.png}
+\includegraphics[width=0.6\textwidth]{climate.png}
 \caption{Speedup from \cite{lyster1997parallel}}
 \label{fig:climate}
 \end{figure}
@@ -131,7 +133,7 @@ The authors handle the different types of parallelism much like the others did. 
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{mpdse.png}
+\includegraphics[width=0.6\textwidth]{mpdse.png}
 \caption{System flowchart from \cite{karimipour2015extended}}
 \label{fig:mpdse}
 \end{figure}
@@ -156,11 +158,9 @@ In \cite{hashemipour1988decentralized}, the authors develop an algorithm for cal
 Additionally Hashemipour et al consider different sensor configurations . First, they consider collocated sensors where the timing of measurements can be coordinated. In this case the parallelism comes from the fact that measurements impact different parts of the computation so each sensor can have concurrent work. Second they consider the situation where the sensors are widely distributed so measurements are not taken at the same time. In this case, the parallelism exploited comes from the time-sequential feature of the data similar to a pipeline pattern. Lastly the authors demonstrate how to combine the two methods in the situation where several groups of collocated sensor are distributed across a wide area.
 
 \subsection{Fully Distributed}
-In \cite{rao1991fully} Rao presents an algorithm for a Kalmn filter across a fully distributed group of sensor nodes. In this case there is no centralized node to perform the final computation that brings the local filter results together. To make up for the lack of a central node, the authors simply broadcast the intermediate results to all the node and then every node computes the final result.
+In \cite{rao1991fully} Rao presents an algorithm for a Kalman filter across a fully distributed group of sensor nodes. In this case there is no centralized node to perform the final computation that brings the local filter results together. To make up for the lack of a central node, the authors simply broadcast the intermediate results to all the node and then every node computes the final result.
 
-
-\subsection{Other sensor stuff}
-\cite{spanos2005distributed,spanos2005approximate}
+Spanos et al present a related system in \cite{spanos2005distributed,spanos2005approximate} that is generalizable to algorithms other than the Klamn filter. Their algorithms allow distributed node to come to a consensus at different points in the algorithm depending on the current network conditions. Their method is similar to Rao's in that it allows the nodes to work independently the n collaborate to get a final result, but achieves even greater resiliency by being flexible in when collaboration occurs. The authors show that the system can compute the filter locally, incorporating data from other sensors as it becomes available with communication occurring $n$ times per filter. 
 
 \section{FPGA Implementations}
 While many excellent software applications exist there are also good reasons to implement the Kalman filter using hardware. Two examples,  \cite{bonato2009floating,liu2007efficient}, use FPGA implementations of Kalman filtering to dramatically reduce the time required and the energy used. These implementations employ some level of parallelism but gain further performance benefits by avoiding limitations inherent to software.
@@ -169,10 +169,12 @@ Bonato et al. \cite{bonato2009floating}, implement the Extended Kalman filter wi
 
 Liu et al. \cite{liu2007efficient} apply a similar technique to the Approximate Kalman filter used for feature tracking in computer vision. In this application thousands of features (each with a separate filter) must be tracked at once. The FPGA implementation incorporates enough parallel matrix operation elements that it can perform all or most of the operations simultaneously. Additionally, rather than inverting each matrix the approximate Kalman filter estimates the inversion further minimizing the time.
 
-\section{Conclusion}
-Sorry I didn't finish in time. Stay tuned for updates!
+While FPGA implementations provide fantastic benefits in terms of speed and power they are currently not commonly available to most systems. There has been some talk of incorporating FPGA fabric into standard chips as an adaptable accelerator, so these may become more common in the future. Also for large state-space Kalman filters the size of the hardware may become prohibitive.
 
+\section{Conclusion}
 In conclusion, the numerous applications of Kalman filters present varied opportunities for parallelization, but differences in the applications make it challenging to generalize a solution to multiple applications. As a result, there are a variety of creative methods used in parallel Kalman filters. These range from vectorization of the linear algebra to distributing the filter among sensor networks.
+
+Potential future work includes seeking improvements in all of these areas. Notably absent from the research is the use of GPU technology; only the paper on smart grid makes good use of them. The HEP papers mention GPUs repeatedly in future work but have yet to implement anything. GPUs are challenging as the require long vectors or matrices to be effective, but these are unavailable in many of the applications. Vector registers offer a better alternative since they are a more appropriate size, but these to are increasing in length beyond what most tracking applications require. It may be possible to combine the computation for multiple filters into longer vectors that fill the entire vector to achieve the desired speedup. Additional research could be at the higher levels of the application, incorporating the Kalman filters into other parallel structures that offer more concurrency.
 
 \nocite{*}
 \bibliographystyle{plain}
